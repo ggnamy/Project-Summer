@@ -1,0 +1,79 @@
+/* ── CSS Reset & Global Variables ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary:        #D4877A;
+  --primary-light:  #EEC5BC;
+  --primary-dark:   #B5685B;
+  --secondary:      #8B9EB0;
+  --accent:         #C4A882;
+  --bg:             #FBF9F7;
+  --bg-card:        #FFFFFF;
+  --bg-subtle:      #F4F0EC;
+  --text:           #2A2A2A;
+  --text-muted:     #7A7A7A;
+  --text-light:     #A8A8A8;
+  --border:         #E8E0DA;
+  --success:        #7EC8A0;
+  --error:          #E07B7B;
+  --warning:        #F0C060;
+  --radius-sm:      6px;
+  --radius:         12px;
+  --radius-lg:      20px;
+  --radius-full:    9999px;
+  --shadow-sm:      0 1px 4px rgba(0,0,0,0.06);
+  --shadow:         0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg:      0 8px 40px rgba(0,0,0,0.12);
+  --transition:     0.2s ease;
+  --font-sans:      system-ui, 'Segoe UI', sans-serif;
+  --navbar-h:       64px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img { max-width: 100%; display: block; }
+
+button { cursor: pointer; font-family: inherit; }
+
+a { color: inherit; text-decoration: none; }
+
+/* ── Utility classes ── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-subtle); }
+::-webkit-scrollbar-thumb {
+  background: var(--primary-light);
+  border-radius: var(--radius-full);
+}

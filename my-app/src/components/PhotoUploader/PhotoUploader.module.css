@@ -1,0 +1,82 @@
+.zone {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  max-height: 420px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-subtle);
+  cursor: pointer;
+  transition: all var(--transition);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zone:hover, .dragging {
+  border-color: var(--primary);
+  background: var(--primary-light) !important;
+  transform: scale(1.01);
+}
+
+.dragging { border-style: solid; }
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.hidden { display: none; }
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.icon { font-size: 3rem; line-height: 1; }
+
+.primary {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.secondary {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.previewWrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.previewWrapper:hover .overlay { opacity: 1; }
