@@ -15,9 +15,9 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 20% 40%, rgba(212,135,122,0.18) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 60% at 80% 60%, rgba(196,168,130,0.15) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 55% 20%, rgba(139,158,176,0.12) 0%, transparent 70%);
+    radial-gradient(ellipse 55% 50% at 15% 40%, rgba(212,135,122,0.20) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 55% at 85% 55%, rgba(196,168,130,0.16) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 40% at 55% 15%, rgba(139,158,176,0.13) 0%, transparent 65%);
   pointer-events: none;
 }
 
@@ -25,7 +25,11 @@
   position: relative;
   z-index: 1;
   text-align: center;
-  max-width: 680px;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
 }
 
 .pill {
@@ -34,15 +38,15 @@
   background: var(--primary-light);
   color: var(--primary-dark);
   border-radius: var(--radius-full);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .headline {
-  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-size: clamp(2.6rem, 6.5vw, 4.2rem);
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -1.5px;
@@ -61,62 +65,33 @@
   font-size: 1.1rem;
   color: var(--text-muted);
   line-height: 1.7;
-  margin-bottom: 36px;
-  max-width: 520px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.ctas {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
+  margin-bottom: 40px;
+  max-width: 480px;
 }
 
 .btnPrimary {
   display: inline-block;
-  padding: 14px 32px;
+  padding: 15px 40px;
   background: var(--primary);
   color: #fff;
   border-radius: var(--radius-full);
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   transition: all var(--transition);
-  box-shadow: 0 4px 16px rgba(212,135,122,0.35);
-  border: none;
+  box-shadow: 0 6px 24px rgba(212,135,122,0.4);
   text-decoration: none;
 }
 
 .btnPrimary:hover {
   background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(212,135,122,0.4);
+  box-shadow: 0 8px 28px rgba(212,135,122,0.45);
 }
 
-.btnSecondary {
-  display: inline-block;
-  padding: 14px 32px;
-  background: var(--bg-card);
-  color: var(--text);
-  border-radius: var(--radius-full);
-  font-size: 1rem;
-  font-weight: 600;
-  border: 1.5px solid var(--border);
-  transition: all var(--transition);
-  text-decoration: none;
-}
-
-.btnSecondary:hover {
-  border-color: var(--primary);
-  color: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-}
 
 /* ── Sections ── */
 .section {
-  padding: 80px 0;
+  padding: 88px 0;
 }
 
 .sectionTitle {
@@ -124,115 +99,128 @@
   font-weight: 800;
   text-align: center;
   margin-bottom: 8px;
-  color: var(--text);
+  letter-spacing: -0.5px;
 }
 
 .sectionSub {
   text-align: center;
   color: var(--text-muted);
-  margin-bottom: 48px;
+  margin-bottom: 52px;
   font-size: 1rem;
 }
 
-/* ── Steps ── */
+/* ── How It Works steps ── */
 .stepsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  position: relative;
+}
+
+@media (max-width: 900px) {
+  .stepsGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .stepsGrid { grid-template-columns: 1fr; }
 }
 
 .stepCard {
   background: var(--bg-card);
   border-radius: var(--radius-lg);
-  padding: 32px 24px;
+  padding: 32px 20px;
   text-align: center;
   border: 1px solid var(--border);
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition), box-shadow var(--transition);
+  position: relative;
 }
 
 .stepCard:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
   box-shadow: var(--shadow);
 }
 
 .stepNum {
-  width: 28px; height: 28px;
-  border-radius: var(--radius-full);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   background: var(--primary-light);
   color: var(--primary-dark);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 800;
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  border: 2px solid var(--primary);
 }
 
-.stepIcon { font-size: 2.2rem; margin-bottom: 12px; }
+.stepIcon {
+  font-size: 2.4rem;
+  margin-bottom: 14px;
+  line-height: 1;
+}
 
 .stepTitle {
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 8px;
+  letter-spacing: -0.2px;
 }
 
 .stepDesc {
-  font-size: 0.88rem;
+  font-size: 0.87rem;
   color: var(--text-muted);
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
-/* ── Season cards ── */
-.seasonGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-.seasonCard {
-  border-radius: var(--radius-lg);
-  padding: 36px 24px;
-  text-align: center;
-  border: 1px solid var(--border);
-  transition: transform var(--transition);
-}
-
-.seasonCard:hover { transform: translateY(-3px); }
-
-.seasonEmoji { font-size: 2.5rem; display: block; margin-bottom: 12px; }
-
-.seasonLabel {
-  font-size: 1.2rem;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-
-.seasonTagline {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  font-weight: 500;
-}
 
 /* ── Banner ── */
 .banner {
-  padding: 80px 24px;
-  background: linear-gradient(135deg, var(--primary) 0%, #C4A882 100%);
+  padding: 96px 24px;
+  background: linear-gradient(135deg, var(--primary) 0%, #C4A882 60%, #8B9EB0 100%);
   text-align: center;
 }
 
-.bannerTitle {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 28px;
+.bannerEyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 16px;
 }
 
-.banner .btnPrimary {
+.bannerTitle {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+
+.bannerSub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 36px;
+  line-height: 1.6;
+}
+
+.btnBanner {
+  display: inline-block;
+  padding: 15px 40px;
   background: #fff;
   color: var(--primary-dark);
+  border-radius: var(--radius-full);
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all var(--transition);
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
-.banner .btnPrimary:hover {
-  background: #fff;
+.btnBanner:hover {
   transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(0,0,0,0.2);
 }

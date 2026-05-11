@@ -3,14 +3,22 @@
   padding: 48px 0 80px;
 }
 
+.pageHeader {
+  margin-bottom: 32px;
+}
+
 .layout {
   display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 40px;
+  grid-template-columns: 1fr 180px 360px;
+  gap: 32px;
   align-items: start;
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr 160px 320px; }
+}
+
+@media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
 }
 
@@ -65,31 +73,14 @@
 
 .changePhoto:hover { background: rgba(0,0,0,0.8); }
 
-/* ── Score bar ── */
-.scoreBar {
-  margin-top: 24px;
+/* ── Center score column ── */
+.scoreCol {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 24px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 20px 24px;
-}
-
-.scoreInfo { flex: 1; }
-
-.scoreTitle {
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.scoreHint {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  margin-bottom: 12px;
-  line-height: 1.5;
+  justify-content: center;
+  gap: 10px;
+  align-self: stretch;
 }
 
 .btnReset {
@@ -119,31 +110,6 @@
   top: calc(var(--navbar-h) + 24px);
 }
 
-.seasonHeader {
-  border-radius: var(--radius-lg);
-  padding: 20px 24px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  font-size: 1.6rem;
-  color: #fff;
-}
-
-.seasonLabel {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: rgba(255,255,255,0.75);
-  font-weight: 700;
-  margin-bottom: 2px;
-}
-
-.seasonName {
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: #fff;
-  letter-spacing: -0.3px;
-}
 
 .noSeason {
   background: var(--bg-subtle);
@@ -281,118 +247,3 @@
   color: var(--text-muted);
 }
 
-/* ── Save button ── */
-.btnSave {
-  padding: 14px;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-full);
-  font-size: 1rem;
-  font-weight: 700;
-  transition: all var(--transition);
-  box-shadow: 0 4px 16px rgba(212,135,122,0.3);
-}
-
-.btnSave:hover:not(:disabled) {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(212,135,122,0.4);
-}
-
-.btnSave:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-/* ── Save Modal ── */
-.modalOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(4px);
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-
-.modal {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: 36px 32px;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: var(--shadow-lg);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.modalTitle {
-  font-size: 1.4rem;
-  font-weight: 800;
-  letter-spacing: -0.3px;
-}
-
-.modalSub {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.modalInput {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  font-size: 1rem;
-  font-family: inherit;
-  background: var(--bg-subtle);
-  color: var(--text);
-  transition: border-color var(--transition);
-  outline: none;
-}
-
-.modalInput:focus { border-color: var(--primary); }
-
-.modalActions {
-  display: flex;
-  gap: 10px;
-  margin-top: 4px;
-}
-
-.btnSaveConfirm {
-  flex: 1;
-  padding: 12px;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius-full);
-  font-size: 0.95rem;
-  font-weight: 700;
-  transition: all var(--transition);
-}
-
-.btnSaveConfirm:hover:not(:disabled) { background: var(--primary-dark); }
-.btnSaveConfirm:disabled { opacity: 0.55; cursor: not-allowed; }
-
-.btnCancel {
-  padding: 12px 20px;
-  background: none;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-full);
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: all var(--transition);
-}
-
-.btnCancel:hover { border-color: var(--text); color: var(--text); }
-
-.modalError {
-  font-size: 0.82rem;
-  color: var(--error);
-}

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { setColor, resetColors, saveLook } from './tryonSlice'
+import { setColor, resetColors } from './tryonSlice'
 import { setPhoto } from '../analysis/analysisSlice'
 import PhotoUploader from '../../components/PhotoUploader/PhotoUploader'
 import ColorPalette from '../../components/ColorPalette/ColorPalette'
@@ -10,7 +10,6 @@ import useAuraScore from '../../hooks/useAuraScore'
 import { SEASON_PALETTES, COLOR_CATEGORIES } from '../../data/seasons'
 import styles from './TryonPage.module.css'
 
-// Draw photo + color overlays onto canvas
 function renderCanvas(canvas, imageSrc, selectedColors, activeCategory) {
   if (!canvas || !imageSrc) return
   const ctx = canvas.getContext('2d')
@@ -63,23 +62,19 @@ function renderCanvas(canvas, imageSrc, selectedColors, activeCategory) {
 }
 
 export default function TryonPage() {
-  const dispatch   = useDispatch()
-  const navigate   = useNavigate()
-  const canvasRef  = useRef(null)
-  const auraScore  = useAuraScore()
+  const dispatch  = useDispatch()
+  const navigate  = useNavigate()
+  const canvasRef = useRef(null)
+  const auraScore = useAuraScore()
 
   const { photo: analysisPhoto, season } = useSelector((s) => s.analysis)
   const { selectedColors } = useSelector((s) => s.tryon)
 
-  const [localPhoto, setLocalPhoto]   = useState(analysisPhoto || null)
-  const [activeTab, setActiveTab]     = useState(COLOR_CATEGORIES[0].key)
-  const [saveName, setSaveName]       = useState('')
-  const [showSaveModal, setShowSaveModal] = useState(false)
-  const [saveStatus, setSaveStatus]   = useState('idle')
+  const [localPhoto, setLocalPhoto] = useState(analysisPhoto || null)
+  const [activeTab, setActiveTab]   = useState(COLOR_CATEGORIES[0].key)
 
   const palette = season ? SEASON_PALETTES[season] : SEASON_PALETTES['Spring']
 
-  // Re-render canvas whenever photo or colors change
   useEffect(() => {
     renderCanvas(canvasRef.current, localPhoto, selectedColors, activeTab)
   }, [localPhoto, selectedColors, activeTab])
@@ -93,220 +88,113 @@ export default function TryonPage() {
     dispatch(setColor({ category: activeTab, color: hex }))
   }
 
-  const handleSaveLook = async () => {
-    if (!saveName.trim()) return
-    setSaveStatus('loading')
-    try {
-      await dispatch(saveLook({
-        name:           saveName.trim(),
-        season:         season || 'Spring',
-        undertone:      palette.undertone,
-        auraScore,
-        selectedColors,
-        createdAt:      new Date().toISOString(),
-      })).unwrap()
-      setSaveStatus('saved')
-      setSaveName('')
-      setTimeout(() => {
-        setShowSaveModal(false)
-        setSaveStatus('idle')
-      }, 1200)
-    } catch {
-      setSaveStatus('error')
-    }
-  }
-
   return (
     <main className={styles.main}>
-      <div className={`container ${styles.layout}`}>
-        {/* Canvas column */}
-        <section className={styles.canvasCol}>
+      <div className="container">
+        <div className={styles.pageHeader}>
           <h1 className={styles.title}>Virtual Try-On</h1>
           <p className={styles.subtitle}>
             Upload your photo, select colors below, and watch them appear on your canvas.
           </p>
+        </div>
 
-          {localPhoto ? (
-            <div className={styles.canvasWrapper}>
-              <canvas ref={canvasRef} className={styles.canvas} />
-              <button
-                className={styles.changePhoto}
-                onClick={() => setLocalPhoto(null)}
-              >
-                Change Photo
-              </button>
-            </div>
-          ) : (
-            <PhotoUploader onPhotoSelect={handlePhotoSelect} />
-          )}
+        <div className={styles.layout}>
 
-          {/* Live Score */}
-          {localPhoto && (
-            <div className={styles.scoreBar}>
-              <AuraScoreMeter score={auraScore} animated={false} />
-              <div className={styles.scoreInfo}>
-                <h3 className={styles.scoreTitle}>Live Aura Score</h3>
-                <p className={styles.scoreHint}>
-                  {season
-                    ? `Score updates as you pick ${season} palette colors`
-                    : 'Run the Analyzer first for a personalized score'}
-                </p>
-                <button
-                  className={styles.btnReset}
-                  onClick={() => dispatch(resetColors())}
-                  disabled={Object.keys(selectedColors).length === 0}
-                >
-                  Clear All Colors
+          {/* ── Col 1: Canvas ── */}
+          <section className={styles.canvasCol}>
+            {localPhoto ? (
+              <div className={styles.canvasWrapper}>
+                <canvas ref={canvasRef} className={styles.canvas} />
+                <button className={styles.changePhoto} onClick={() => setLocalPhoto(null)}>
+                  Change Photo
                 </button>
               </div>
-            </div>
-          )}
-        </section>
+            ) : (
+              <PhotoUploader onPhotoSelect={handlePhotoSelect} />
+            )}
+          </section>
 
-        {/* Palette column */}
-        <section className={styles.paletteCol}>
-          {/* Season header */}
-          {season && (
-            <div
-              className={styles.seasonHeader}
-              style={{ background: palette?.gradient }}
-            >
-              <span>{palette?.emoji}</span>
-              <div>
-                <p className={styles.seasonLabel}>Your Season</p>
-                <h2 className={styles.seasonName}>{season}</h2>
-              </div>
-            </div>
-          )}
+          {/* ── Col 2: Score ── */}
+          <section className={styles.scoreCol}>
+            <AuraScoreMeter score={auraScore} animated={false} />
+          </section>
 
-          {!season && (
-            <div className={styles.noSeason}>
-              <p>
-                No season detected yet.{' '}
-                <a onClick={() => navigate('/analyzer')} className={styles.link}>
-                  Run the Analyzer
-                </a>{' '}
-                for personalised palettes, or browse all colors below.
-              </p>
-            </div>
-          )}
-
-          {/* Category tabs */}
-          <div className={styles.tabs}>
-            {COLOR_CATEGORIES.map(({ key, label, icon }) => (
-              <button
-                key={key}
-                className={[styles.tab, activeTab === key ? styles.tabActive : ''].join(' ')}
-                onClick={() => setActiveTab(key)}
-              >
-                <span>{icon}</span>
-                <span>{label}</span>
-                {selectedColors[key] && (
-                  <span
-                    className={styles.tabDot}
-                    style={{ background: selectedColors[key] }}
-                  />
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* Color swatches */}
-          <div className={styles.paletteCard}>
-            <ColorPalette
-              colors={palette[activeTab] || []}
-              selectedHex={selectedColors[activeTab]}
-              onSelect={handleColorSelect}
-              label={season ? `${season} — ${COLOR_CATEGORIES.find(c => c.key === activeTab)?.label}` : undefined}
-            />
-
-            {selectedColors[activeTab] && (
-              <div className={styles.selectedInfo}>
-                <div
-                  className={styles.selectedDot}
-                  style={{ background: selectedColors[activeTab] }}
-                />
-                <span className={styles.selectedHex}>{selectedColors[activeTab]}</span>
-                <span className={styles.selectedName}>
-                  {palette[activeTab]?.find(c => c.hex === selectedColors[activeTab])?.name}
-                </span>
+          {/* ── Col 3: Palette ── */}
+          <section className={styles.paletteCol}>
+            {!season && (
+              <div className={styles.noSeason}>
+                <p>
+                  No season detected yet.{' '}
+                  <a onClick={() => navigate('/analyzer')} className={styles.link}>
+                    Run the Analyzer
+                  </a>{' '}
+                  for personalised palettes, or browse all colors below.
+                </p>
               </div>
             )}
-          </div>
 
-          {/* Selected summary */}
-          {Object.keys(selectedColors).length > 0 && (
-            <div className={styles.summary}>
-              <h3 className={styles.summaryTitle}>Selected Colors</h3>
-              {COLOR_CATEGORIES.map(({ key, label, icon }) =>
-                selectedColors[key] ? (
-                  <div key={key} className={styles.summaryRow}>
-                    <span>{icon} {label}</span>
-                    <div className={styles.summaryRight}>
-                      <div
-                        className={styles.summaryDot}
-                        style={{ background: selectedColors[key] }}
-                      />
-                      <span className={styles.summaryHex}>{selectedColors[key]}</span>
-                    </div>
-                  </div>
-                ) : null
+            <div className={styles.tabs}>
+              {COLOR_CATEGORIES.map(({ key, label, icon }) => (
+                <button
+                  key={key}
+                  className={[styles.tab, activeTab === key ? styles.tabActive : ''].join(' ')}
+                  onClick={() => setActiveTab(key)}
+                >
+                  <span>{icon}</span>
+                  <span>{label}</span>
+                  {selectedColors[key] && (
+                    <span className={styles.tabDot} style={{ background: selectedColors[key] }} />
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <div className={styles.paletteCard}>
+              <ColorPalette
+                colors={palette[activeTab] || []}
+                selectedHex={selectedColors[activeTab]}
+                onSelect={handleColorSelect}
+                label={season ? `${season} — ${COLOR_CATEGORIES.find(c => c.key === activeTab)?.label}` : undefined}
+              />
+              {selectedColors[activeTab] && (
+                <div className={styles.selectedInfo}>
+                  <div className={styles.selectedDot} style={{ background: selectedColors[activeTab] }} />
+                  <span className={styles.selectedHex}>{selectedColors[activeTab]}</span>
+                  <span className={styles.selectedName}>
+                    {palette[activeTab]?.find(c => c.hex === selectedColors[activeTab])?.name}
+                  </span>
+                </div>
               )}
             </div>
-          )}
 
-          {/* Save button */}
-          <button
-            className={styles.btnSave}
-            onClick={() => setShowSaveModal(true)}
-            disabled={Object.keys(selectedColors).length === 0}
-          >
-            Save This Look
-          </button>
-        </section>
-      </div>
-
-      {/* Save Modal */}
-      {showSaveModal && (
-        <div className={styles.modalOverlay} onClick={() => setShowSaveModal(false)}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <h2 className={styles.modalTitle}>Save Your Look</h2>
-            <p className={styles.modalSub}>Give this look a name to find it later.</p>
-            <input
-              type="text"
-              className={styles.modalInput}
-              placeholder="e.g. Spring Garden, Date Night…"
-              value={saveName}
-              onChange={(e) => setSaveName(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSaveLook()}
-              autoFocus
-              maxLength={60}
-            />
-            <div className={styles.modalActions}>
-              <button
-                className={styles.btnSaveConfirm}
-                onClick={handleSaveLook}
-                disabled={!saveName.trim() || saveStatus === 'loading'}
-              >
-                {saveStatus === 'loading' ? 'Saving…'
-                  : saveStatus === 'saved'  ? '✓ Saved!'
-                  : 'Save Look'}
-              </button>
-              <button
-                className={styles.btnCancel}
-                onClick={() => { setShowSaveModal(false); setSaveStatus('idle') }}
-              >
-                Cancel
-              </button>
-            </div>
-            {saveStatus === 'error' && (
-              <p className={styles.modalError}>
-                Failed to save. Check your VITE_API_URL in .env.
-              </p>
+            {Object.keys(selectedColors).length > 0 && (
+              <div className={styles.summary}>
+                <h3 className={styles.summaryTitle}>Selected Colors</h3>
+                {COLOR_CATEGORIES.map(({ key, label, icon }) =>
+                  selectedColors[key] ? (
+                    <div key={key} className={styles.summaryRow}>
+                      <span>{icon} {label}</span>
+                      <div className={styles.summaryRight}>
+                        <div className={styles.summaryDot} style={{ background: selectedColors[key] }} />
+                        <span className={styles.summaryHex}>{selectedColors[key]}</span>
+                      </div>
+                    </div>
+                  ) : null
+                )}
+              </div>
             )}
-          </div>
+
+            <button
+              className={styles.btnReset}
+              onClick={() => dispatch(resetColors())}
+              disabled={Object.keys(selectedColors).length === 0}
+            >
+              Clear All Colors
+            </button>
+          </section>
+
         </div>
-      )}
+      </div>
     </main>
   )
 }

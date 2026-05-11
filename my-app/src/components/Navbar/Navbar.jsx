@@ -5,7 +5,7 @@ const links = [
   { to: '/',        label: 'Home'      },
   { to: '/analyzer', label: 'Analyzer' },
   { to: '/tryon',   label: 'Try-On'   },
-  { to: '/looks',   label: 'My Looks' },
+  { to: '/looks',   label: 'Beauty Guide' },
 ]
 
 export default function Navbar() {

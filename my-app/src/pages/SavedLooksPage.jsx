@@ -1,183 +1,168 @@
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { fetchLooks, deleteLook, updateLook } from '../features/tryon/tryonSlice'
-import { SEASON_PALETTES, COLOR_CATEGORIES } from '../data/seasons'
+import { useSelector } from 'react-redux'
 import styles from './SavedLooksPage.module.css'
 
-function LookCard({ look, onDelete, onEdit }) {
-  const palette = SEASON_PALETTES[look.season]
+const TUTORIAL_STEPS = [
+  {
+    step: 1,
+    icon: '💧',
+    title: 'Skincare & Prep',
+    description: 'Start with a clean, moisturized face. Apply a lightweight primer suited to your skin type — hydrating for dry skin, mattifying for oily.',
+    tip: 'Wait 2–3 minutes for primer to set before applying foundation. This makes your base last much longer.',
+    duration: '3–5 min',
+  },
+  {
+    step: 2,
+    icon: '✨',
+    title: 'Foundation & Concealer',
+    description: 'Apply foundation with a damp sponge or brush, starting from the center of your face and blending outward. Dab concealer under eyes and on any blemishes.',
+    tip: 'Use concealer one shade lighter than your foundation for under-eyes. Blend with a tapping motion, not dragging.',
+    duration: '5–7 min',
+  },
+  {
+    step: 3,
+    icon: '🔆',
+    title: 'Contour & Blush',
+    description: 'Lightly contour the hollows of your cheeks, nose sides, and jawline. Then smile and apply blush to the apples of your cheeks, blending upward toward the temples.',
+    tip: 'Choose blush that matches your natural flush color — it will always look the most natural and flattering.',
+    duration: '3–5 min',
+  },
+  {
+    step: 4,
+    icon: '👁️',
+    title: 'Eye Makeup',
+    description: 'Apply a neutral base shadow all over the lid. Add a deeper shade to the crease and blend well. Line close to the lash line and finish with mascara.',
+    tip: 'Always blend in circular motions at the crease — harsh lines make eyes look smaller. Build color gradually.',
+    duration: '7–10 min',
+  },
+  {
+    step: 5,
+    icon: '🪮',
+    title: 'Brows',
+    description: 'Fill in sparse areas with short, hair-like strokes using a brow pencil or powder. Follow your natural brow shape and set with a clear brow gel.',
+    tip: 'The tail of your brow should align with the outer corner of your eye. A clean brow instantly lifts the whole face.',
+    duration: '2–3 min',
+  },
+  {
+    step: 6,
+    icon: '💋',
+    title: 'Lip Color',
+    description: 'Line lips with a matching pencil to define the shape and prevent feathering. Apply your chosen lip color from the center outward for a clean, even finish.',
+    tip: 'Blot with a tissue and apply a second layer for longer-lasting color. For fullness, add a touch of gloss to the center.',
+    duration: '2–3 min',
+  },
+  {
+    step: 7,
+    icon: '🌟',
+    title: 'Set & Finish',
+    description: 'Dust a light setting powder over the T-zone to control shine. Spritz a setting spray all over your face to lock everything in place and give a natural finish.',
+    tip: 'Hold the setting spray 30 cm from your face and mist in a figure-8 pattern for even, seamless coverage.',
+    duration: '2 min',
+  },
+]
 
-  return (
-    <div className={styles.card}>
-      <div className={styles.cardHeader} style={{ background: palette?.gradient }}>
-        <div className={styles.cardHeaderLeft}>
-          <span className={styles.cardEmoji}>{palette?.emoji || '✦'}</span>
-          <div>
-            <h3 className={styles.cardName}>{look.name}</h3>
-            <p className={styles.cardSeason}>{look.season} · {look.undertone}</p>
-          </div>
-        </div>
-        <div className={styles.cardScore}>{look.auraScore}</div>
-      </div>
-
-      <div className={styles.cardBody}>
-        {/* Color swatches */}
-        <div className={styles.swatchRow}>
-          {COLOR_CATEGORIES.map(({ key, icon }) =>
-            look.selectedColors?.[key] ? (
-              <div key={key} className={styles.swatch} title={`${icon} ${look.selectedColors[key]}`}>
-                <div className={styles.swatchDot} style={{ background: look.selectedColors[key] }} />
-              </div>
-            ) : null
-          )}
-          {Object.keys(look.selectedColors || {}).length === 0 && (
-            <span className={styles.noColors}>No colors saved</span>
-          )}
-        </div>
-
-        <p className={styles.cardDate}>
-          {new Date(look.createdAt).toLocaleDateString('en-GB', {
-            day: 'numeric', month: 'short', year: 'numeric'
-          })}
-        </p>
-      </div>
-
-      <div className={styles.cardActions}>
-        <button className={styles.btnEdit} onClick={() => onEdit(look)}>Edit Name</button>
-        <button className={styles.btnDelete} onClick={() => onDelete(look.id)}>Delete</button>
-      </div>
-    </div>
-  )
-}
+const PRO_TIPS = [
+  {
+    icon: '☀️',
+    title: 'Check in Natural Light',
+    body: 'Always do a final check in daylight before you head out. Artificial light can make colors appear warmer or cooler than they truly are on your skin.',
+  },
+  {
+    icon: '🎨',
+    title: 'Match Your Undertone First',
+    body: 'Look at the veins on your inner wrist. Blue-purple veins mean cool undertones; green veins mean warm. This is the single most important step before choosing any color.',
+  },
+  {
+    icon: '💧',
+    title: 'Prep Your Skin Well',
+    body: 'Moisturize and prime before applying makeup. Hydrated skin makes colors appear more vibrant, helps foundation last longer, and gives a smoother finish.',
+  },
+  {
+    icon: '✦',
+    title: 'Build, Don\'t Pile',
+    body: 'Start with a light hand and layer gradually. Thin layers blend seamlessly and look natural — heavy applications can look cakey and emphasize texture.',
+  },
+]
 
 export default function SavedLooksPage() {
-  const dispatch = useDispatch()
-  const { savedLooks, status, error } = useSelector((s) => s.tryon)
-
-  const [editingId, setEditingId]     = useState(null)
-  const [editName, setEditName]       = useState('')
-  const [deleteConfirm, setDeleteConfirm] = useState(null)
-  const [filterSeason, setFilterSeason]  = useState('All')
-
-  useEffect(() => {
-    dispatch(fetchLooks())
-  }, [dispatch])
-
-  const handleDelete = (id) => {
-    dispatch(deleteLook(id))
-    setDeleteConfirm(null)
-  }
-
-  const handleEditSave = (look) => {
-    if (!editName.trim()) return
-    dispatch(updateLook({ id: look.id, look: { ...look, name: editName.trim() } }))
-    setEditingId(null)
-  }
-
-  const seasons = ['All', ...Object.keys(SEASON_PALETTES)]
-  const filtered = filterSeason === 'All'
-    ? savedLooks
-    : savedLooks.filter(l => l.season === filterSeason)
+  const { season } = useSelector((s) => s.analysis)
 
   return (
     <main className={styles.main}>
       <div className="container">
-        <div className={styles.header}>
-          <div>
-            <h1 className={styles.title}>Saved Looks</h1>
-            <p className={styles.subtitle}>{savedLooks.length} looks saved</p>
-          </div>
-          <Link to="/tryon" className={styles.btnNew}>+ New Look</Link>
+
+        {/* ── Page header ── */}
+        <div className={styles.pageHeader}>
+          <h1 className={styles.title}>Beauty Guide</h1>
+          <p className={styles.subtitle}>
+            Learn how to build a flawless look from scratch — step by step, with tips tailored to your color season.
+          </p>
+          {!season && (
+            <Link to="/analyzer" className={styles.ctaBtnInline}>
+              Find My Season First →
+            </Link>
+          )}
+          {season && (
+            <div className={styles.detectedSeason}>
+              Your season: <strong>{season}</strong> — use your palette colors in each step below.
+            </div>
+          )}
         </div>
 
-        {/* Season filter */}
-        <div className={styles.filters}>
-          {seasons.map((s) => (
-            <button
-              key={s}
-              className={[styles.filterBtn, filterSeason === s ? styles.filterActive : ''].join(' ')}
-              onClick={() => setFilterSeason(s)}
-            >
-              {s !== 'All' ? SEASON_PALETTES[s]?.emoji + ' ' : ''}
-              {s}
-            </button>
-          ))}
-        </div>
-
-        {/* States */}
-        {status === 'loading' && (
-          <div className={styles.center}>
-            <div className={styles.spinner} />
-            <p>Loading your looks…</p>
-          </div>
-        )}
-
-        {status === 'failed' && (
-          <div className={styles.errorBox}>
-            <strong>Couldn&apos;t load saved looks.</strong> {error}
-            <br />
-            <small>Make sure VITE_API_URL is set correctly in your .env file.</small>
-          </div>
-        )}
-
-        {status === 'succeeded' && filtered.length === 0 && (
-          <div className={styles.emptyState}>
-            <div className={styles.emptyIcon}>✦</div>
-            <p>
-              {filterSeason === 'All'
-                ? 'No looks saved yet.'
-                : `No ${filterSeason} looks saved.`}
-            </p>
-            <Link to="/tryon" className={styles.btnNew}>Create Your First Look</Link>
-          </div>
-        )}
-
-        {/* Grid */}
-        <div className={styles.grid}>
-          {filtered.map((look) => (
-            editingId === look.id ? (
-              <div key={look.id} className={styles.editCard}>
-                <h3 className={styles.editTitle}>Rename Look</h3>
-                <input
-                  className={styles.editInput}
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleEditSave(look)}
-                  autoFocus
-                  maxLength={60}
-                />
-                <div className={styles.editActions}>
-                  <button className={styles.btnSaveEdit} onClick={() => handleEditSave(look)}>
-                    Save
-                  </button>
-                  <button className={styles.btnCancelEdit} onClick={() => setEditingId(null)}>
-                    Cancel
-                  </button>
+        {/* ── Tutorial steps ── */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Step-by-Step Full Face Tutorial</h2>
+          <p className={styles.sectionSub}>Total time: approximately 25–35 minutes</p>
+          <div className={styles.stepsGrid}>
+            {TUTORIAL_STEPS.map((s) => (
+              <div key={s.step} className={styles.stepCard}>
+                <div className={styles.stepLeft}>
+                  <div className={styles.stepNumber}>{s.step}</div>
+                  <div className={styles.stepLine} />
+                </div>
+                <div className={styles.stepRight}>
+                  <div className={styles.stepHeader}>
+                    <span className={styles.stepIcon}>{s.icon}</span>
+                    <div>
+                      <h3 className={styles.stepTitle}>{s.title}</h3>
+                      <span className={styles.stepDuration}>{s.duration}</span>
+                    </div>
+                  </div>
+                  <p className={styles.stepDesc}>{s.description}</p>
+                  <div className={styles.stepTip}>
+                    <span className={styles.stepTipLabel}>Tip</span>
+                    <p>{s.tip}</p>
+                  </div>
                 </div>
               </div>
-            ) : deleteConfirm === look.id ? (
-              <div key={look.id} className={styles.deleteCard}>
-                <p className={styles.deleteQuestion}>Delete &quot;{look.name}&quot;?</p>
-                <div className={styles.editActions}>
-                  <button className={styles.btnDeleteConfirm} onClick={() => handleDelete(look.id)}>
-                    Yes, Delete
-                  </button>
-                  <button className={styles.btnCancelEdit} onClick={() => setDeleteConfirm(null)}>
-                    Cancel
-                  </button>
-                </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Pro tips ── */}
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Pro Application Tips</h2>
+          <div className={styles.proGrid}>
+            {PRO_TIPS.map((tip) => (
+              <div key={tip.title} className={styles.proCard}>
+                <span className={styles.proIcon}>{tip.icon}</span>
+                <h3 className={styles.proTitle}>{tip.title}</h3>
+                <p className={styles.proBody}>{tip.body}</p>
               </div>
-            ) : (
-              <LookCard
-                key={look.id}
-                look={look}
-                onDelete={(id) => setDeleteConfirm(id)}
-                onEdit={(l) => { setEditingId(l.id); setEditName(l.name) }}
-              />
-            )
-          ))}
+            ))}
+          </div>
+        </section>
+
+        {/* ── CTA ── */}
+        <div className={styles.ctaBox}>
+          <p className={styles.ctaHeading}>Ready to try your colors?</p>
+          <p className={styles.ctaText}>Upload your photo and see your personalized aura score.</p>
+          <div className={styles.ctaBtns}>
+            <Link to="/analyzer" className={styles.ctaBtnPrimary}>Analyze My Colors →</Link>
+            <Link to="/tryon"    className={styles.ctaBtnSecondary}>Virtual Try-On</Link>
+          </div>
         </div>
+
       </div>
     </main>
   )
