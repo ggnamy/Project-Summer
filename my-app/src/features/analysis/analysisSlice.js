@@ -3,7 +3,7 @@ import { callClaudeAnalysis } from './analysisAPI'
 
 export const analyzePhotoWithTM = createAsyncThunk(
   'analysis/analyzePhotoWithTM',
-  async ({ base64Image, mediaType, label, probability, allPredictions, auraScore }, { rejectWithValue }) => {
+  async ({ base64Image, mediaType, label, probability, allPredictions, scores }, { rejectWithValue }) => {
     try {
       const colorResult = await callClaudeAnalysis(base64Image, mediaType)
       return {
@@ -11,7 +11,7 @@ export const analyzePhotoWithTM = createAsyncThunk(
         label,
         probability,
         allPredictions,
-        auraScore,
+        scores,
         scoringMode: 'tm',
         makeupReason: null,
       }
@@ -27,7 +27,7 @@ const analysisSlice = createSlice({
     photo: null,
     undertone: null,
     season: null,
-    auraScore: null,
+    scores: null,
     scoringMode: null,
     makeupReason: null,
     skinTone: null,
@@ -45,7 +45,7 @@ const analysisSlice = createSlice({
     },
     resetAnalysis(state) {
       Object.assign(state, {
-        photo: null, undertone: null, season: null, auraScore: null,
+        photo: null, undertone: null, season: null, scores: null,
         scoringMode: null, makeupReason: null, skinTone: null,
         recommendations: null, avoidColors: null,
         label: null, probability: null, allPredictions: null,
@@ -64,7 +64,7 @@ const analysisSlice = createSlice({
         state.status          = 'succeeded'
         state.undertone       = p.undertone
         state.season          = p.season
-        state.auraScore       = p.auraScore
+        state.scores          = p.scores
         state.scoringMode     = p.scoringMode
         state.makeupReason    = p.makeupReason
         state.skinTone        = p.skinTone

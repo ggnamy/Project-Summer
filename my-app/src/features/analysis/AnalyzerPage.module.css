@@ -3,6 +3,10 @@
   padding: 48px 0 80px;
 }
 
+@media (max-width: 640px) {
+  .main { padding: 24px 0 48px; }
+}
+
 .pageHeader {
   margin-bottom: 32px;
 }
@@ -16,23 +20,89 @@
 
 @media (max-width: 1024px) {
   .layout { grid-template-columns: 1fr 1fr; }
+  .tryonRow { grid-column: 1 / -1; }
 }
 
 @media (max-width: 640px) {
   .layout { grid-template-columns: 1fr; }
+  .tryonRow { grid-column: 1; }
+  .pageHeader { margin-bottom: 20px; }
 }
 
 /* ── Col 1: Upload ── */
 .uploadCol {}
 
-/* ── Col 2: Score circle ── */
+/* ── Col 2: Score bars ── */
 .midCol {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   gap: 12px;
   min-height: 360px;
+}
+
+.scoreBarsCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.scoreBarsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.scoreBarsTitle {
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-muted);
+}
+
+.scoreBarRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.scoreBarLabel {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.scoreBarTrack {
+  flex: 1;
+  height: 12px;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.scoreBarFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scoreBarPct {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 44px;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 /* ── Col 3: Band + description ── */
@@ -76,7 +146,8 @@
 
 .btnAnalyze {
   flex: 1;
-  padding: 4px 24px;
+  padding: 14px 24px;
+  min-height: 44px;
   background: var(--primary);
   color: #fff;
   border: none;

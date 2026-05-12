@@ -4,6 +4,7 @@
 .hero {
   position: relative;
   min-height: calc(100vh - var(--navbar-h));
+  min-height: calc(100svh - var(--navbar-h) - env(safe-area-inset-top, 0px));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,6 +124,23 @@
 
 @media (max-width: 480px) {
   .stepsGrid { grid-template-columns: 1fr; }
+}
+
+/* ── Mobile / tablet overrides ── */
+@media (max-width: 768px) {
+  .hero { padding: 64px 20px; min-height: auto; }
+  .section { padding: 56px 0; }
+  .banner { padding: 64px 20px; }
+  .sectionSub { margin-bottom: 36px; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding: 48px 16px; }
+  .subline { font-size: 1rem; }
+  .btnPrimary { padding: 13px 32px; width: 100%; text-align: center; }
+  .section { padding: 44px 0; }
+  .banner { padding: 52px 16px; }
+  .btnBanner { width: 100%; text-align: center; }
 }
 
 .stepCard {

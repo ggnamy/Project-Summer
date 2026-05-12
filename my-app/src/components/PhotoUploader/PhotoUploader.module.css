@@ -80,3 +80,7 @@
 }
 
 .previewWrapper:hover .overlay { opacity: 1; }
+
+@media (max-width: 480px) {
+  .zone { max-height: 320px; }
+}

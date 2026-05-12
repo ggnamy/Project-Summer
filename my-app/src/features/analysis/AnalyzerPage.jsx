@@ -3,24 +3,36 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { analyzePhotoWithTM, resetAnalysis, setPhoto } from './analysisSlice'
 import PhotoUploader from '../../components/PhotoUploader/PhotoUploader'
-import AuraScoreMeter from '../../components/AuraScoreMeter/AuraScoreMeter'
 import styles from './AnalyzerPage.module.css'
 
 const TM_MODEL_URL = import.meta.env.VITE_TM_MODEL_URL
 
-function getScoreDescription(score) {
-  if (score >= 80) return 'Your color choices are an excellent match for your skin tone. These shades brighten and enhance your natural complexion beautifully — wear them with confidence!'
-  if (score >= 51) return 'Your colors work reasonably well with your skin tone. Some shades complement you nicely, though a few adjustments could bring out even more vibrancy in your look.'
-  if (score >= 31) return 'Some of your color choices may be clashing with your skin tone, making your complexion appear less vibrant. Try switching to shades that better align with your undertone.'
-  return 'The current colors are not recommended for your skin tone — they clash significantly and may dull your complexion. We strongly suggest exploring a different color palette.'
+function getTopCategory(scores) {
+  if (!scores) return null
+  if (scores.excellent >= scores.good && scores.excellent >= scores.fair) return 'excellent'
+  if (scores.good >= scores.fair) return 'good'
+  return 'fair'
 }
 
-function getScoreBand(score) {
-  if (score >= 90) return { label: 'Perfect Harmony ✨', css: 'bandPerfect',    desc: 'The color is perfect, helping to brighten and enhance your skin tone.' }
-  if (score >= 70) return { label: 'Good Fit 👍',        css: 'bandGoodFit',    desc: 'This color complements your skin tone well with a vibrant, harmonious look.' }
-  if (score >= 50) return { label: 'Mismatched ⚠️',     css: 'bandMismatched', desc: 'The color may clash slightly with your skin tone, making the face look less vibrant.' }
-  return                   { label: 'Clash 🔄',          css: 'bandClash',      desc: 'This color is not recommended — it clashes with your skin tone.' }
+function getBand(scores) {
+  const top = getTopCategory(scores)
+  if (top === 'excellent') return { label: 'Perfect Harmony ✨', css: 'bandPerfect',    desc: 'The color is perfect, helping to brighten and enhance your skin tone.' }
+  if (top === 'good')      return { label: 'Good Fit 👍',        css: 'bandGoodFit',    desc: 'This color complements your skin tone well with a vibrant, harmonious look.' }
+  return                          { label: 'Fair Match ⚠️',      css: 'bandMismatched', desc: 'The color may clash slightly with your skin tone, making the face look less vibrant.' }
 }
+
+function getDescription(scores) {
+  const top = getTopCategory(scores)
+  if (top === 'excellent') return 'Your color choices are an excellent match for your skin tone. These shades brighten and enhance your natural complexion beautifully — wear them with confidence!'
+  if (top === 'good')      return 'Your colors work reasonably well with your skin tone. Some shades complement you nicely, though a few adjustments could bring out even more vibrancy in your look.'
+  return 'Some of your color choices may be clashing with your skin tone, making your complexion appear less vibrant. Try switching to shades that better align with your undertone.'
+}
+
+const SCORE_BARS = [
+  { key: 'excellent', label: 'Excellent', color: '#7EC8A0' },
+  { key: 'good',      label: 'Good',      color: '#D4877A' },
+  { key: 'fair',      label: 'Fair',      color: '#8B9EB0' },
+]
 
 let _tmLoadPromise = null
 function loadTMScripts() {
@@ -44,12 +56,12 @@ function loadTMScripts() {
 
 export default function AnalyzerPage() {
   const dispatch = useDispatch()
-  const { season, auraScore, scoringMode, status, error } = useSelector((s) => s.analysis)
+  const { season, scores, scoringMode, status, error } = useSelector((s) => s.analysis)
 
-  const [modelStatus, setModelStatus]     = useState('loading')
-  const [localPreview, setLocalPreview]   = useState(null)
+  const [modelStatus, setModelStatus]       = useState('loading')
+  const [localPreview, setLocalPreview]     = useState(null)
   const [localMediaType, setLocalMediaType] = useState('image/jpeg')
-  const [imgLoaded, setImgLoaded]         = useState(false)
+  const [imgLoaded, setImgLoaded]           = useState(false)
 
   const modelRef = useRef(null)
   const imgRef   = useRef(null)
@@ -87,13 +99,15 @@ export default function AnalyzerPage() {
       fair      = predictions[2]?.probability ?? 0
     }
 
-    const score  = Math.round((excellent * 100 + good * 50 + fair * 20) * 100) / 100
-    const preds  = predictions.map(({ className, probability }) => ({ className, probability }))
-    const base64 = localPreview.split(',')[1]
+    const round = (v) => Math.round(v * 1000) / 10
+    const newScores = { excellent: round(excellent), good: round(good), fair: round(fair) }
+    const preds     = predictions.map(({ className, probability }) => ({ className, probability }))
+    const base64    = localPreview.split(',')[1]
+
     dispatch(analyzePhotoWithTM({
       base64Image: base64, mediaType: localMediaType,
       label: top.className, probability: top.probability,
-      allPredictions: preds, auraScore: score,
+      allPredictions: preds, scores: newScores,
     }))
   }, [localPreview, localMediaType, imgLoaded, modelStatus, dispatch])
 
@@ -103,14 +117,14 @@ export default function AnalyzerPage() {
     setImgLoaded(false)
   }, [dispatch])
 
-  const band = auraScore !== null ? getScoreBand(auraScore) : null
+  const band = scores ? getBand(scores) : null
 
   return (
     <main className={styles.main}>
       <div className="container">
         <div className={styles.pageHeader}>
           <h1 className={styles.title}>Color Analysis</h1>
-          <p className={styles.subtitle}>Upload a clear, well-lit photo to discover your personal color season and aura score.</p>
+          <p className={styles.subtitle}>Upload a clear, well-lit photo to discover your personal color season and match scores.</p>
         </div>
 
         <div className={styles.layout}>
@@ -162,12 +176,12 @@ export default function AnalyzerPage() {
             )}
           </section>
 
-          {/* ── Col 2: Score circle ── */}
+          {/* ── Col 2: Score bars ── */}
           <section className={styles.midCol}>
             {status === 'idle' && (
               <div className={styles.emptyState}>
                 <div className={styles.emptyIcon}>✦</div>
-                <p>Your score will appear here</p>
+                <p>Your scores will appear here</p>
               </div>
             )}
             {status === 'loading' && (
@@ -177,13 +191,27 @@ export default function AnalyzerPage() {
                 <p className={styles.loadingHint}>This may take a moment</p>
               </div>
             )}
-            {status === 'succeeded' && (
-              <>
-                <AuraScoreMeter score={auraScore ?? 0} animated />
-                <span className={scoringMode === 'rule' ? styles.badgeRule : styles.badgeAI}>
-                  {scoringMode === 'tm' ? '✦ AI Model' : scoringMode === 'gemini' ? '✦ Gemini AI' : 'Color Analysis'}
-                </span>
-              </>
+            {status === 'succeeded' && scores && (
+              <div className={styles.scoreBarsCard}>
+                <div className={styles.scoreBarsHeader}>
+                  <span className={styles.scoreBarsTitle}>Match Scores</span>
+                  <span className={scoringMode === 'tm' ? styles.badgeAI : styles.badgeRule}>
+                    {scoringMode === 'tm' ? '✦ AI Model' : 'Color Analysis'}
+                  </span>
+                </div>
+                {SCORE_BARS.map(({ key, label, color }) => (
+                  <div key={key} className={styles.scoreBarRow}>
+                    <span className={styles.scoreBarLabel}>{label}</span>
+                    <div className={styles.scoreBarTrack}>
+                      <div
+                        className={styles.scoreBarFill}
+                        style={{ width: `${scores[key]}%`, background: color }}
+                      />
+                    </div>
+                    <span className={styles.scoreBarPct}>{scores[key].toFixed(1)}%</span>
+                  </div>
+                ))}
+              </div>
             )}
           </section>
 
@@ -195,16 +223,15 @@ export default function AnalyzerPage() {
                   <strong>{band.label}</strong>
                   <p>{band.desc}</p>
                 </div>
-                <p className={styles.desc}>{getScoreDescription(auraScore)}</p>
+                <p className={styles.desc}>{getDescription(scores)}</p>
               </>
             )}
           </section>
 
-          {/* Spans cols 2–3, centered below score + results */}
           {status === 'succeeded' && season && (
             <div className={styles.tryonRow}>
               <Link to="/tryon" className={styles.tryonBtn}>
-                Try On {season} Colors →
+                Take the Color Quiz →
               </Link>
             </div>
           )}
