@@ -7,6 +7,20 @@ import styles from './AnalyzerPage.module.css'
 
 const TM_MODEL_URL = import.meta.env.VITE_TM_MODEL_URL
 
+/* ── Season visual config ── */
+const SEASON_STYLES = {
+  Spring: { gradient: 'linear-gradient(135deg, #FFD54F 0%, #FF8A65 50%, #F48FB1 100%)', emoji: '🌸', undertone: 'Warm Tone' },
+  Summer: { gradient: 'linear-gradient(135deg, #CE93D8 0%, #90CAF9 50%, #80CBC4 100%)', emoji: '🌊', undertone: 'Cool Tone' },
+  Autumn: { gradient: 'linear-gradient(135deg, #FF8F00 0%, #BF360C 50%, #4E342E 100%)', emoji: '🍂', undertone: 'Warm Tone' },
+  Winter: { gradient: 'linear-gradient(135deg, #1565C0 0%, #6A1B9A 50%, #1B1B1B 100%)', emoji: '❄️', undertone: 'Cool Tone' },
+}
+
+const SCORE_BARS = [
+  { key: 'excellent', label: 'Excellent', color: '#52b788' },
+  { key: 'good',      label: 'Good',      color: '#D4877A' },
+  { key: 'fair',      label: 'Fair',      color: '#8B9EB0' },
+]
+
 function getTopCategory(scores) {
   if (!scores) return null
   if (scores.excellent >= scores.good && scores.excellent >= scores.fair) return 'excellent'
@@ -15,25 +29,80 @@ function getTopCategory(scores) {
 }
 
 function getBand(scores) {
+  const { excellent, good, fair } = scores
   const top = getTopCategory(scores)
-  if (top === 'excellent') return { label: 'Perfect Harmony ✨', css: 'bandPerfect',    desc: 'The color is perfect, helping to brighten and enhance your skin tone.' }
-  if (top === 'good')      return { label: 'Good Fit 👍',        css: 'bandGoodFit',    desc: 'This color complements your skin tone well with a vibrant, harmonious look.' }
-  return                          { label: 'Fair Match ⚠️',      css: 'bandMismatched', desc: 'The color may clash slightly with your skin tone, making the face look less vibrant.' }
+  if (top === 'excellent') {
+    if (excellent >= 90) return { label: 'Perfect Harmony ✨', css: 'bandPerfect',  desc: `${excellent.toFixed(1)}% Excellent — these colors are an outstanding match for your skin tone.` }
+    if (excellent >= 70) return { label: 'Strong Match 💚',    css: 'bandPerfect',  desc: `${excellent.toFixed(1)}% Excellent — these colors complement your complexion beautifully.` }
+    return                      { label: 'Good Fit 👍',         css: 'bandGoodFit', desc: `${excellent.toFixed(1)}% Excellent — these colors work reasonably well with your skin tone.` }
+  }
+  if (top === 'good') return { label: 'Decent Fit 🔵', css: 'bandGoodFit',    desc: `${good.toFixed(1)}% Good — moderate compatibility. Some adjustments could improve the match.` }
+  if (fair >= 80)    return { label: 'Strong Clash 🔴', css: 'bandClash',      desc: `${fair.toFixed(1)}% Fair — significant color clash detected with your skin tone.` }
+  return                    { label: 'Fair Match ⚠️',   css: 'bandMismatched', desc: `${fair.toFixed(1)}% Fair — slight clashing detected. Season-matched colors are recommended.` }
 }
 
-function getDescription(scores) {
-  const top = getTopCategory(scores)
-  if (top === 'excellent') return 'Your color choices are an excellent match for your skin tone. These shades brighten and enhance your natural complexion beautifully — wear them with confidence!'
-  if (top === 'good')      return 'Your colors work reasonably well with your skin tone. Some shades complement you nicely, though a few adjustments could bring out even more vibrancy in your look.'
-  return 'Some of your color choices may be clashing with your skin tone, making your complexion appear less vibrant. Try switching to shades that better align with your undertone.'
+function getRecommendations(scores, season) {
+  const { excellent, good, fair } = scores
+  const top   = getTopCategory(scores)
+  const sName = season ?? 'your'
+
+  if (excellent >= 90) return {
+    headline: 'Near-perfect color harmony!',
+    intro: `A ${excellent.toFixed(1)}% Excellent score means these colors are exceptionally well-suited to your ${sName} complexion — your choices are outstanding.`,
+    tips: [
+      `Your ${sName} undertone absolutely loves these colors — keep wearing this palette`,
+      'Add accessories in similar tones to extend the harmonious effect',
+      'Try bolder or more saturated versions of these shades for special occasions',
+    ],
+  }
+  if (excellent >= 70) return {
+    headline: 'Strong color harmony',
+    intro: `${excellent.toFixed(1)}% Excellent — these colors work beautifully for your ${sName} complexion. Your choices are well-suited to your undertone.`,
+    tips: [
+      `These shades align well with your ${sName} undertone — wear them confidently`,
+      'Combine the best-performing tones together for maximum polish',
+      'Explore deeper or lighter variations to add dimension without losing harmony',
+    ],
+  }
+  if (top === 'excellent') return {
+    headline: 'Decent color harmony',
+    intro: `Your colors show ${excellent.toFixed(1)}% Excellent compatibility with your ${sName} complexion. A few targeted adjustments could bring this significantly higher.`,
+    tips: [
+      `Compare your current shades with the recommended ${sName} palette below`,
+      'Focus on tones that score highest in Excellent for future outfit choices',
+      'Avoid shades that skew too far from your undertone',
+    ],
+  }
+  if (top === 'good') return {
+    headline: 'Good compatibility, room to grow',
+    intro: `${good.toFixed(1)}% Good compatibility detected for your ${sName} skin tone. Small palette adjustments could push this into the Excellent range.`,
+    tips: [
+      `Shift gradually toward your core ${sName} palette for more vibrant results`,
+      'Pair the best-matching shades together to maximize visual impact',
+      'Use the recommended color swatches below as a starting reference',
+    ],
+  }
+  if (fair >= 80) return {
+    headline: 'Significant color mismatch',
+    intro: `A ${fair.toFixed(1)}% Fair score indicates these colors clash noticeably with your ${sName} skin tone. Switching to season-matched shades could visibly transform your look.`,
+    tips: [
+      `Swap these colors for shades from your ${sName} palette shown below`,
+      'Avoid colors that compete directly with your undertone, especially near your face',
+      'Take the Color Quiz for a complete personal color season guide',
+    ],
+  }
+  return {
+    headline: 'Color refinement recommended',
+    intro: `${fair.toFixed(1)}% Fair — these colors have some clashing with your ${sName} undertone. Switching to better-matched shades would noticeably enhance your complexion.`,
+    tips: [
+      `Explore the recommended ${sName} colors in the palette section below`,
+      'Try softer or warmer/cooler variations of your current shades first',
+      'Take the Color Quiz for deeper guidance on your personal color season',
+    ],
+  }
 }
 
-const SCORE_BARS = [
-  { key: 'excellent', label: 'Excellent', color: '#7EC8A0' },
-  { key: 'good',      label: 'Good',      color: '#D4877A' },
-  { key: 'fair',      label: 'Fair',      color: '#8B9EB0' },
-]
-
+/* ── TM script loader ── */
 let _tmLoadPromise = null
 function loadTMScripts() {
   if (_tmLoadPromise) return _tmLoadPromise
@@ -54,9 +123,15 @@ function loadTMScripts() {
   return _tmLoadPromise
 }
 
+/* ══════════════════════════════════════════════════════════
+   Main page
+══════════════════════════════════════════════════════════ */
 export default function AnalyzerPage() {
   const dispatch = useDispatch()
-  const { season, scores, scoringMode, status, error } = useSelector((s) => s.analysis)
+  const {
+    season, undertone, skinTone, scores, scoringMode,
+    recommendations, avoidColors, status, error,
+  } = useSelector((s) => s.analysis)
 
   const [modelStatus, setModelStatus]       = useState('loading')
   const [localPreview, setLocalPreview]     = useState(null)
@@ -92,14 +167,13 @@ export default function AnalyzerPage() {
     let excellent = findProb('excellent')
     let good      = findProb('good')
     let fair      = findProb('fair')
-
     if (excellent === 0 && good === 0 && fair === 0) {
       excellent = predictions[0]?.probability ?? 0
       good      = predictions[1]?.probability ?? 0
       fair      = predictions[2]?.probability ?? 0
     }
 
-    const round = (v) => Math.round(v * 1000) / 10
+    const round     = (v) => Math.round(v * 1000) / 10
     const newScores = { excellent: round(excellent), good: round(good), fair: round(fair) }
     const preds     = predictions.map(({ className, probability }) => ({ className, probability }))
     const base64    = localPreview.split(',')[1]
@@ -117,20 +191,26 @@ export default function AnalyzerPage() {
     setImgLoaded(false)
   }, [dispatch])
 
-  const band = scores ? getBand(scores) : null
+  const band  = scores ? getBand(scores)                        : null
+  const reco  = scores ? getRecommendations(scores, season)     : null
+  const style = season ? SEASON_STYLES[season]                  : null
 
   return (
     <main className={styles.main}>
       <div className="container">
+
         <div className={styles.pageHeader}>
           <h1 className={styles.title}>Color Analysis</h1>
-          <p className={styles.subtitle}>Upload a clear, well-lit photo to discover your personal color season and match scores.</p>
+          <p className={styles.subtitle}>
+            Upload a clear, well-lit selfie to discover your personal color season and get tailored recommendations.
+          </p>
         </div>
 
         <div className={styles.layout}>
 
-          {/* ── Col 1: Upload ── */}
+          {/* ══ LEFT: Upload panel ══ */}
           <section className={styles.uploadCol}>
+
             {modelStatus === 'loading' && (
               <div className={styles.modelLoading}>
                 <span className={styles.spinner} /> Loading AI model…
@@ -159,7 +239,7 @@ export default function AnalyzerPage() {
                 disabled={!localPreview || !imgLoaded || status === 'loading' || modelStatus !== 'ready'}
               >
                 {status === 'loading'
-                  ? <><span className={styles.spinner} /> Analyzing…</>
+                  ? <><span className={styles.spinnerDark} /> Analyzing…</>
                   : 'Analyze My Colors'}
               </button>
               {status !== 'idle' && (
@@ -174,67 +254,101 @@ export default function AnalyzerPage() {
                 <strong>Analysis failed:</strong> {error}
               </div>
             )}
+
           </section>
 
-          {/* ── Col 2: Score bars ── */}
-          <section className={styles.midCol}>
+          {/* ══ RIGHT: Results panel ══ */}
+          <section className={styles.resultsCol}>
+
+            {/* ── Idle empty state ── */}
             {status === 'idle' && (
               <div className={styles.emptyState}>
-                <div className={styles.emptyIcon}>✦</div>
-                <p>Your scores will appear here</p>
+                <div className={styles.emptyIconWrap}>
+                  <span className={styles.emptyIcon}>✦</span>
+                </div>
+                <p className={styles.emptyTitle}>Your results will appear here</p>
+                <p className={styles.emptyHint}>Upload a photo and click Analyze to get started</p>
               </div>
             )}
+
+            {/* ── Loading ── */}
             {status === 'loading' && (
               <div className={styles.loadingState}>
                 <div className={styles.loadingDots}><span /><span /><span /></div>
-                <p>Analysing your photo…</p>
+                <p className={styles.loadingText}>Analysing your photo…</p>
                 <p className={styles.loadingHint}>This may take a moment</p>
               </div>
             )}
-            {status === 'succeeded' && scores && (
-              <div className={styles.scoreBarsCard}>
-                <div className={styles.scoreBarsHeader}>
-                  <span className={styles.scoreBarsTitle}>Match Scores</span>
-                  <span className={scoringMode === 'tm' ? styles.badgeAI : styles.badgeRule}>
-                    {scoringMode === 'tm' ? '✦ AI Model' : 'Color Analysis'}
-                  </span>
-                </div>
-                {SCORE_BARS.map(({ key, label, color }) => (
-                  <div key={key} className={styles.scoreBarRow}>
-                    <span className={styles.scoreBarLabel}>{label}</span>
-                    <div className={styles.scoreBarTrack}>
-                      <div
-                        className={styles.scoreBarFill}
-                        style={{ width: `${scores[key]}%`, background: color }}
-                      />
+
+            {/* ── Results ── */}
+            {status === 'succeeded' && (
+              <div className={styles.resultsStack}>
+
+                {/* 1. Match scores */}
+                {scores && (
+                  <div className={styles.card}>
+                    <div className={styles.cardHeader}>
+                      <span className={styles.cardTitle}>Match Scores</span>
+                      <span className={scoringMode === 'tm' ? styles.badgeAI : styles.badgeRule}>
+                        {scoringMode === 'tm' ? '✦ AI Model' : 'Color Analysis'}
+                      </span>
                     </div>
-                    <span className={styles.scoreBarPct}>{scores[key].toFixed(1)}%</span>
+                    <div className={styles.scoreBars}>
+                      {SCORE_BARS.map(({ key, label, color }) => (
+                        <div key={key} className={styles.scoreBarRow}>
+                          <span className={styles.scoreBarLabel}>{label}</span>
+                          <div className={styles.scoreBarTrack}>
+                            <div
+                              className={styles.scoreBarFill}
+                              style={{ width: `${scores[key]}%`, background: color }}
+                            />
+                          </div>
+                          <span className={styles.scoreBarPct}>{scores[key].toFixed(1)}%</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
+                )}
+
+                {/* 3. Interpretation */}
+                {band && (
+                  <div className={[styles.card, styles[band.css]].join(' ')}>
+                    <strong className={styles.bandLabel}>{band.label}</strong>
+                    <p className={styles.bandDesc}>{band.desc}</p>
+                  </div>
+                )}
+
+                {/* 4. Recommendations */}
+                {reco && (
+                  <div className={styles.card}>
+                    <div className={styles.cardHeader}>
+                      <span className={styles.cardTitle}>💡 Recommendations</span>
+                    </div>
+                    <p className={styles.recoHeadline}>{reco.headline}</p>
+                    <p className={styles.recoIntro}>{reco.intro}</p>
+                    <ul className={styles.tipList}>
+                      {reco.tips.map((tip, i) => (
+                        <li key={i} className={styles.tipItem}>
+                          <span className={styles.tipCheck}>✓</span>
+                          <span>{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                  </div>
+                )}
+
+                {/* 5. CTA */}
+                {season && (
+                  <Link to="/tryon" className={styles.ctaBtn}>
+                    Take the Color Quiz →
+                  </Link>
+                )}
+
               </div>
             )}
-          </section>
 
-          {/* ── Col 3: Band label + description ── */}
-          <section className={styles.rightCol}>
-            {status === 'succeeded' && band && (
-              <>
-                <div className={styles[band.css]}>
-                  <strong>{band.label}</strong>
-                  <p>{band.desc}</p>
-                </div>
-                <p className={styles.desc}>{getDescription(scores)}</p>
-              </>
-            )}
           </section>
-
-          {status === 'succeeded' && season && (
-            <div className={styles.tryonRow}>
-              <Link to="/tryon" className={styles.tryonBtn}>
-                Take the Color Quiz →
-              </Link>
-            </div>
-          )}
 
         </div>
       </div>
