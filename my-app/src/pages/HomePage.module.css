@@ -1,62 +1,79 @@
-.main { flex: 1; }
-
-/* ── Hero ── */
-.hero {
+.main {
+  flex: 1;
   position: relative;
-  min-height: calc(100vh - var(--navbar-h));
+  overflow-x: hidden;
+}
+
+/* ── Decorative blobs ── */
+.blobA {
+  position: fixed;
+  top: -160px;
+  right: -160px;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,133,106,0.13) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(40px);
+}
+
+.blobB {
+  position: fixed;
+  bottom: -120px;
+  left: -120px;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,165,116,0.11) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: -1;
+  filter: blur(40px);
+}
+
+/* ══ HERO ══ */
+.hero {
   min-height: calc(100svh - var(--navbar-h) - env(safe-area-inset-top, 0px));
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  padding: 80px 24px;
-}
-
-.heroBlob {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 55% 50% at 15% 40%, rgba(212,135,122,0.20) 0%, transparent 65%),
-    radial-gradient(ellipse 45% 55% at 85% 55%, rgba(196,168,130,0.16) 0%, transparent 65%),
-    radial-gradient(ellipse 40% 40% at 55% 15%, rgba(139,158,176,0.13) 0%, transparent 65%);
-  pointer-events: none;
+  gap: 80px;
+  padding: 80px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .heroContent {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  max-width: 640px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
+  flex: 1;
+  max-width: 560px;
+  animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) both;
 }
 
 .pill {
   display: inline-block;
-  padding: 6px 18px;
+  padding: 7px 20px;
   background: var(--primary-light);
   color: var(--primary-dark);
   border-radius: var(--radius-full);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   margin-bottom: 28px;
 }
 
 .headline {
-  font-size: clamp(2.6rem, 6.5vw, 4.2rem);
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 7vw, 5rem);
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.08;
   letter-spacing: -1.5px;
-  margin-bottom: 20px;
   color: var(--text);
+  margin-bottom: 22px;
 }
 
-.gradient {
-  background: linear-gradient(135deg, var(--primary) 0%, #C4A882 50%, #8B9EB0 100%);
+.gradientText {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-gold) 60%, var(--primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -67,110 +84,292 @@
   color: var(--text-muted);
   line-height: 1.7;
   margin-bottom: 40px;
-  max-width: 480px;
+  max-width: 460px;
 }
 
 .heroBtns {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
-  justify-content: center;
 }
 
 .btnPrimary {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   padding: 15px 36px;
-  background: var(--primary);
+  background: var(--primary-dark);
   color: #fff;
   border-radius: var(--radius-full);
   font-size: 1rem;
-  font-weight: 700;
-  transition: all var(--transition);
-  box-shadow: 0 6px 24px rgba(212,135,122,0.4);
+  font-weight: 600;
+  letter-spacing: 0.2px;
   text-decoration: none;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 6px 24px rgba(160,82,45,0.35);
 }
 
 .btnPrimary:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(212,135,122,0.45);
+  background: #8B4424;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 32px rgba(160,82,45,0.42);
 }
 
-.btnSecondary {
-  display: inline-block;
+.btnOutline {
+  display: inline-flex;
+  align-items: center;
   padding: 15px 36px;
   background: var(--bg-card);
   color: var(--text);
   border-radius: var(--radius-full);
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   border: 1.5px solid var(--border);
-  transition: all var(--transition);
   text-decoration: none;
+  transition: all var(--transition);
 }
 
-.btnSecondary:hover {
+.btnOutline:hover {
   border-color: var(--primary);
   color: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(212,135,122,0.15);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--shadow-sm);
 }
 
-
-/* ── Feature Cards ── */
-.featureSection {
-  padding: 0 0 72px;
+/* ── Mood-board collage ── */
+.heroDecor {
+  position: relative;
+  width: 420px;
+  height: 400px;
+  flex-shrink: 0;
+  animation: fadeUp 0.7s 0.15s cubic-bezier(0.16,1,0.3,1) both;
 }
 
-.featureGrid {
+/* Floating sparkles */
+.sparkle {
+  position: absolute;
+  font-size: 0.9rem;
+  color: var(--accent-gold);
+  animation: sparkleAnim 3.2s ease-in-out infinite;
+  user-select: none;
+  pointer-events: none;
+}
+
+@keyframes sparkleAnim {
+  0%, 100% { transform: scale(1) rotate(0deg);   opacity: 0.6; }
+  50%       { transform: scale(1.4) rotate(25deg); opacity: 1;   }
+}
+
+/* Base card */
+.moodCard {
+  position: absolute;
+  width: 196px;
+  border-radius: 20px;
+  padding: 20px 18px;
+  box-shadow: 0 14px 40px rgba(140,80,40,0.14), 0 4px 12px rgba(0,0,0,0.07);
+}
+
+/* Card 1 — Spring, top-left, -6deg */
+.moodCard1 {
+  top: 0;
+  left: 0;
+  background: linear-gradient(145deg, #FFF0E6, #FFE0C0);
+  transform: rotate(-6deg);
+  z-index: 1;
+}
+
+/* Card 2 — Color wheel, center, slight tilt */
+.moodCard2 {
+  top: 90px;
+  left: 86px;
+  background: #FFFAF7;
+  border: 1px solid rgba(196,133,106,0.18);
+  transform: rotate(1deg);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 20px;
+}
+
+/* Card 3 — CTA terracotta, bottom-right, +4deg */
+.moodCard3 {
+  bottom: 4px;
+  right: 4px;
+  background: linear-gradient(145deg, #A0522D, #C87060);
+  transform: rotate(4deg);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.moodCardSeason {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #C4724A;
+  display: block;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.moodCardDots {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.moodDot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  flex-shrink: 0;
+}
+
+.moodCardTag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #B8725A;
+}
+
+/* Color wheel (CSS conic-gradient) */
+.colorWheel {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #FFD54F 0deg,
+    #FF8A65 45deg,
+    #E57373 90deg,
+    #CE93D8 135deg,
+    #90CAF9 180deg,
+    #80CBC4 225deg,
+    #A5D6A7 275deg,
+    #FFF176 315deg,
+    #FFD54F 360deg
+  );
+  box-shadow: 0 4px 18px rgba(0,0,0,0.16);
+  flex-shrink: 0;
+}
+
+.moodCard2Label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+.moodCard3Eye {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.65);
+}
+
+.moodCard3Title {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+}
+
+@media (max-width: 900px) {
+  .hero        { flex-direction: column; gap: 40px; padding: 60px 24px; min-height: auto; text-align: center; }
+  .heroBtns    { justify-content: center; }
+  .subline     { margin-left: auto; margin-right: auto; }
+  .heroDecor   { width: 320px; height: 300px; }
+  .moodCard    { width: 150px; }
+  .moodCard2   { top: 70px; left: 66px; }
+}
+
+@media (max-width: 480px) {
+  .hero        { padding: 40px 16px 48px; }
+  .headline    { font-size: clamp(2.4rem,10vw,3.4rem); }
+  .btnPrimary, .btnOutline { width: 100%; justify-content: center; }
+  .heroBtns    { flex-direction: column; }
+  .heroDecor   { width: 260px; height: 250px; }
+  .moodCard    { width: 120px; padding: 14px; }
+  .moodCard2   { top: 56px; left: 52px; }
+  .colorWheel  { width: 60px; height: 60px; }
+  .moodCardSeason { font-size: 1.2rem; }
+  .moodDot     { width: 20px; height: 20px; }
+}
+
+/* ══ FEATURES ══ */
+.featuresSection {
+  padding: 80px 0;
+}
+
+.featuresGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 }
 
-@media (max-width: 640px) {
-  .featureGrid { grid-template-columns: 1fr; }
-}
+@media (max-width: 900px) { .featuresGrid { grid-template-columns: 1fr; } }
+@media (min-width: 600px) and (max-width: 900px) { .featuresGrid { grid-template-columns: repeat(3, 1fr); } }
 
 .featureCard {
-  background: var(--feat-bg, var(--primary-light));
-  border: 1.5px solid color-mix(in srgb, var(--accent) 25%, transparent);
-  border-radius: var(--radius-lg);
-  padding: 32px 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 36px 28px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  box-shadow: var(--shadow-sm);
   transition: transform var(--transition), box-shadow var(--transition);
 }
 
 .featureCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 32px rgba(0,0,0,0.08);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow);
 }
 
-.featureTag {
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 2px;
+.featureIconWrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
 }
 
 .featureIcon {
-  font-size: 2rem;
+  font-size: 1.6rem;
+  color: var(--primary-dark);
   line-height: 1;
 }
 
-.featureTitle {
-  font-size: 1.15rem;
+.featureTag {
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: -0.3px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.featureTitle {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
   color: var(--text);
+  letter-spacing: -0.2px;
 }
 
 .featureDesc {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
   line-height: 1.65;
   flex: 1;
@@ -178,168 +377,221 @@
 
 .featureLink {
   display: inline-block;
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 0.88rem;
   font-weight: 700;
-  color: var(--accent);
-  text-decoration: none;
-  transition: opacity 0.2s;
+  color: var(--primary-dark);
+  transition: opacity var(--transition), transform var(--transition);
 }
 
-.featureLink:hover { opacity: 0.75; }
+.featureLink:hover { opacity: 0.75; transform: translateX(4px); }
 
-/* ── Sections ── */
-.section {
-  padding: 88px 0;
+/* ══ SEASON SECTION ══ */
+.seasonSection {
+  padding: 80px 0 96px;
+  background: var(--bg-subtle);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
-.sectionTitle {
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  font-weight: 800;
-  text-align: center;
-  margin-bottom: 8px;
-  letter-spacing: -0.5px;
-}
-
-.sectionSub {
-  text-align: center;
-  color: var(--text-muted);
-  margin-bottom: 52px;
-  font-size: 1rem;
-}
-
-/* ── How It Works steps ── */
-.stepsGrid {
+.seasonLayout {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  position: relative;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
 }
 
 @media (max-width: 900px) {
-  .stepsGrid { grid-template-columns: repeat(2, 1fr); }
+  .seasonLayout { grid-template-columns: 1fr; gap: 40px; }
 }
 
-@media (max-width: 480px) {
-  .stepsGrid { grid-template-columns: 1fr; }
-}
-
-/* ── Mobile / tablet overrides ── */
-@media (max-width: 768px) {
-  .hero { padding: 64px 20px; min-height: auto; }
-  .section { padding: 56px 0; }
-  .banner { padding: 64px 20px; }
-  .sectionSub { margin-bottom: 36px; }
-}
-
-@media (max-width: 480px) {
-  .hero { padding: 48px 16px; }
-  .subline { font-size: 1rem; }
-  .heroBtns { flex-direction: column; width: 100%; }
-  .btnPrimary  { padding: 13px 32px; width: 100%; text-align: center; }
-  .btnSecondary { padding: 13px 32px; width: 100%; text-align: center; }
-  .section { padding: 44px 0; }
-  .featureSection { padding: 0 0 44px; }
-  .banner { padding: 52px 16px; }
-  .btnBanner { width: 100%; text-align: center; }
-}
-
-.stepCard {
-  background: var(--bg-card);
-  border-radius: var(--radius-lg);
-  padding: 32px 20px;
-  text-align: center;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  transition: transform var(--transition), box-shadow var(--transition);
-  position: relative;
-}
-
-.stepCard:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow);
-}
-
-.stepNum {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: var(--primary-light);
-  color: var(--primary-dark);
-  font-size: 0.8rem;
+.eyebrow {
+  display: block;
+  font-size: 0.72rem;
   font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 14px;
-  border: 2px solid var(--primary);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 12px;
 }
 
-.stepIcon {
-  font-size: 2.4rem;
-  margin-bottom: 14px;
-  line-height: 1;
+.seasonHeading {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  margin-bottom: 20px;
+  line-height: 1.2;
 }
 
-.stepTitle {
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-  letter-spacing: -0.2px;
-}
-
-.stepDesc {
-  font-size: 0.87rem;
+.seasonBody {
+  font-size: 0.95rem;
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.75;
+  margin-bottom: 14px;
 }
 
+.seasonCta {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 10px;
+  padding: 13px 30px;
+  background: var(--primary-dark);
+  color: #fff;
+  border-radius: var(--radius-full);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 16px rgba(160,82,45,0.3);
+}
 
-/* ── Banner ── */
+.seasonCta:hover {
+  background: #8B4424;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(160,82,45,0.38);
+}
+
+.seasonCards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.seasonCard {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 4px 16px rgba(140,80,40,0.08);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.seasonCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(140,80,40,0.12);
+}
+
+.seasonCardTop {
+  height: 80px;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 16px 12px;
+}
+
+.seasonCardName {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 800;
+  /* color set via inline style per season */
+}
+
+.seasonCardBottom {
+  background: var(--bg-card);
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.seasonCardTone {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-light);
+}
+
+.seasonDots {
+  display: flex;
+  gap: 6px;
+}
+
+.seasonDot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+/* ══ BANNER ══ */
 .banner {
-  padding: 96px 24px;
-  background: linear-gradient(135deg, var(--primary) 0%, #C4A882 60%, #8B9EB0 100%);
+  padding: 100px 24px;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, #C4856A 50%, var(--accent-gold) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.12) 1.5px, transparent 1.5px),
+    radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 32px 32px, 60px 60px;
+  background-position: 0 0, 16px 16px;
+  pointer-events: none;
+}
+
+.bannerInner {
+  position: relative;
+  z-index: 1;
   text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
 }
 
 .bannerEyebrow {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   color: rgba(255,255,255,0.75);
-  margin-bottom: 16px;
 }
 
 .bannerTitle {
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4.5vw, 3rem);
   font-weight: 800;
   color: #fff;
   letter-spacing: -0.5px;
-  margin-bottom: 12px;
+  line-height: 1.15;
 }
 
 .bannerSub {
   font-size: 1rem;
-  color: rgba(255,255,255,0.8);
-  margin-bottom: 36px;
+  color: rgba(255,255,255,0.82);
   line-height: 1.6;
 }
 
 .btnBanner {
-  display: inline-block;
-  padding: 15px 40px;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 6px;
+  padding: 16px 40px;
   background: #fff;
   color: var(--primary-dark);
   border-radius: var(--radius-full);
   font-size: 1rem;
   font-weight: 700;
   text-decoration: none;
-  transition: all var(--transition);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transition: transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
 }
 
 .btnBanner:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 28px rgba(0,0,0,0.2);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 640px) {
+  .featuresSection { padding: 56px 0; }
+  .seasonSection   { padding: 56px 0 64px; }
+  .banner          { padding: 72px 16px; }
+  .btnBanner       { width: 100%; justify-content: center; }
 }

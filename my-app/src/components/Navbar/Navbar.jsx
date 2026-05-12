@@ -1,16 +1,19 @@
 import { NavLink } from 'react-router-dom'
 import { useState } from 'react'
+import { useTranslation } from '../../hooks/useTranslation'
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher'
 import styles from './Navbar.module.css'
-
-const links = [
-  { to: '/',         label: 'Home'         },
-  { to: '/analyzer', label: 'Analyzer'     },
-  { to: '/tryon',    label: 'Color Quiz'   },
-  { to: '/looks',    label: 'Beauty Guide' },
-]
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const { t } = useTranslation()
+
+  const links = [
+    { to: '/',         label: t('nav_home')     },
+    { to: '/analyzer', label: t('nav_analyzer') },
+    { to: '/tryon',    label: t('nav_quiz')      },
+    { to: '/looks',    label: t('nav_guide')     },
+  ]
 
   return (
     <header className={styles.header}>
@@ -20,32 +23,34 @@ export default function Navbar() {
           <span>AuraColor</span>
         </NavLink>
 
-        <ul className={styles.links}>
-          {links.map(({ to, label }) => (
-            <li key={to}>
-              <NavLink
-                to={to}
-                end={to === '/'}
-                className={({ isActive }) =>
-                  [styles.link, isActive ? styles.active : ''].join(' ')
-                }
-              >
-                {label}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-
-        <button
-          className={styles.hamburger}
-          onClick={() => setOpen(o => !o)}
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-        >
-          <span className={[styles.bar, open ? styles.bar1Open : ''].join(' ')} />
-          <span className={[styles.bar, open ? styles.bar2Open : ''].join(' ')} />
-          <span className={[styles.bar, open ? styles.bar3Open : ''].join(' ')} />
-        </button>
+        <div className={styles.navRight}>
+          <ul className={styles.links}>
+            {links.map(({ to, label }) => (
+              <li key={to}>
+                <NavLink
+                  to={to}
+                  end={to === '/'}
+                  className={({ isActive }) =>
+                    [styles.link, isActive ? styles.active : ''].join(' ')
+                  }
+                >
+                  {label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+          <LanguageSwitcher />
+          <button
+            className={styles.hamburger}
+            onClick={() => setOpen(o => !o)}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+          >
+            <span className={[styles.bar, open ? styles.bar1Open : ''].join(' ')} />
+            <span className={[styles.bar, open ? styles.bar2Open : ''].join(' ')} />
+            <span className={[styles.bar, open ? styles.bar3Open : ''].join(' ')} />
+          </button>
+        </div>
       </nav>
 
       <div
@@ -68,6 +73,9 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
+        <div className={styles.mobileLangWrap}>
+          <LanguageSwitcher />
+        </div>
       </div>
     </header>
   )

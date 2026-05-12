@@ -45,14 +45,16 @@ export default function PhotoUploader({ onPhotoSelect, preview, disabled }) {
         <div className={styles.previewWrapper}>
           <img src={preview} alt="Uploaded photo" className={styles.preview} />
           <div className={styles.overlay}>
-            <span>Change photo</span>
+            <span>✦ Change photo</span>
           </div>
         </div>
       ) : (
         <div className={styles.placeholder}>
-          <div className={styles.icon}>📷</div>
+          <div className={styles.iconWrap}>
+            <span className={styles.icon}>📷</span>
+          </div>
           <p className={styles.primary}>Drop your photo here</p>
-          <p className={styles.secondary}>or click to browse — JPG, PNG, WEBP</p>
+          <p className={styles.secondary}>or click to browse · JPG, PNG, WEBP</p>
         </div>
       )}
     </div>

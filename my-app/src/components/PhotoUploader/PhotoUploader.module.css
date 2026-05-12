@@ -2,12 +2,12 @@
   position: relative;
   width: 100%;
   aspect-ratio: 3 / 4;
-  max-height: 420px;
+  max-height: 440px;
   border: 2px dashed var(--border);
   border-radius: var(--radius-lg);
   background: var(--bg-subtle);
   cursor: pointer;
-  transition: all var(--transition);
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -16,14 +16,14 @@
 
 .zone:hover, .dragging {
   border-color: var(--primary);
+  border-style: solid;
   background: var(--primary-light) !important;
+  box-shadow: 0 0 0 4px rgba(196,133,106,0.15), var(--shadow);
   transform: scale(1.01);
 }
 
-.dragging { border-style: solid; }
-
 .disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -34,23 +34,36 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 32px;
   text-align: center;
   pointer-events: none;
 }
 
-.icon { font-size: 3rem; line-height: 1; }
+.iconWrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+  box-shadow: var(--shadow-sm);
+}
+
+.icon { font-size: 2rem; line-height: 1; }
 
 .primary {
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 600;
   color: var(--text);
 }
 
 .secondary {
-  font-size: 0.82rem;
-  color: var(--text-muted);
+  font-size: 0.78rem;
+  color: var(--text-light);
 }
 
 .previewWrapper {
@@ -68,19 +81,21 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: linear-gradient(to top, rgba(44,24,16,0.55) 0%, transparent 60%);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
+  padding-bottom: 20px;
   opacity: 0;
-  transition: opacity var(--transition);
+  transition: opacity 0.28s ease;
   color: #fff;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.3px;
 }
 
 .previewWrapper:hover .overlay { opacity: 1; }
 
 @media (max-width: 480px) {
-  .zone { max-height: 320px; }
+  .zone { max-height: 340px; }
 }

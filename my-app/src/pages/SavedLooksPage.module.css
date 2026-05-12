@@ -1,308 +1,462 @@
 .main {
   flex: 1;
-  padding: 48px 0 96px;
 }
 
-@media (max-width: 640px) {
-  .main { padding: 24px 0 56px; }
+/* ══════════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════════ */
+.hero {
+  background: linear-gradient(135deg, #F5E6D8 0%, #EDD5B8 40%, #F0E0CC 70%, #FDF6F0 100%);
+  display: flex;
+  flex-direction: column;
 }
 
-/* ── Page header ── */
-.pageHeader {
-  margin-bottom: 56px;
+.heroInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 48px;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
 }
 
-.title {
-  font-size: clamp(1.8rem, 5vw, 2.4rem);
+.heroLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 520px;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(196,133,106,0.15);
+  color: #C4856A;
+  border: 1px solid rgba(196,133,106,0.3);
+  border-radius: 50px;
+  padding: 5px 14px;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: -0.5px;
-  margin-bottom: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  width: fit-content;
 }
 
-.subtitle {
-  color: var(--text-muted);
-  font-size: 1rem;
+.heroTitle {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 4rem;
+  font-weight: 800;
+  color: #2C1810;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  margin: 0;
+}
+
+.heroSub {
+  font-size: 1.1rem;
+  color: #6B4C3B;
+  max-width: 480px;
   line-height: 1.6;
-  max-width: 560px;
-  margin-bottom: 20px;
+  margin: 0;
 }
 
-.detectedSeason {
-  display: inline-block;
-  font-size: 0.88rem;
-  color: var(--primary-dark);
-  background: var(--primary-light);
-  border-radius: var(--radius-full);
-  padding: 6px 16px;
-  font-weight: 600;
-}
-
-.ctaBtnInline {
-  display: inline-block;
-  padding: 10px 22px;
-  background: var(--primary);
+.heroCta {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 28px;
+  background: #C4856A;
   color: #fff;
-  border-radius: var(--radius-full);
-  font-size: 0.9rem;
+  border-radius: 50px;
+  font-size: 0.95rem;
   font-weight: 700;
   text-decoration: none;
-  transition: all var(--transition);
-  box-shadow: 0 4px 12px rgba(212,135,122,0.3);
+  width: fit-content;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(196,133,106,0.35);
 }
 
-.ctaBtnInline:hover {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
-}
-
-/* ── Sections ── */
-.section {
-  margin-bottom: 64px;
-}
-
-.sectionTitle {
-  font-size: 1.3rem;
-  font-weight: 800;
-  letter-spacing: -0.3px;
-  margin-bottom: 6px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--border);
-}
-
-.sectionSub {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-bottom: 28px;
-  margin-top: 4px;
-}
-
-/* ── Tutorial steps ── */
-.stepsGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.stepCard {
-  display: flex;
-  gap: 0;
-}
-
-.stepLeft {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
-  width: 52px;
-}
-
-.stepNumber {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--primary);
-  color: #fff;
-  font-size: 0.88rem;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(212,135,122,0.35);
-  z-index: 1;
-}
-
-.stepLine {
-  flex: 1;
-  width: 2px;
-  background: var(--border);
-  margin: 4px 0;
-  min-height: 20px;
-}
-
-.stepCard:last-child .stepLine {
-  display: none;
-}
-
-.stepRight {
-  padding: 0 0 32px 20px;
-  flex: 1;
-}
-
-.stepHeader {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 10px;
-  padding-top: 6px;
-}
-
-.stepIcon {
-  font-size: 1.5rem;
-  line-height: 1;
-}
-
-.stepTitle {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--text);
-  letter-spacing: -0.2px;
-}
-
-.stepDuration {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-.stepDesc {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.65;
-  margin-bottom: 10px;
-}
-
-.stepTip {
-  background: var(--primary-light);
-  border-left: 3px solid var(--primary);
-  border-radius: var(--radius);
-  padding: 10px 14px;
-  font-size: 0.85rem;
-  color: var(--primary-dark);
-  line-height: 1.55;
-}
-
-.stepTipLabel {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--primary-dark);
-  margin-bottom: 3px;
-  margin-right: 6px;
-}
-
-/* ── Pro tips grid ── */
-.proGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-
-@media (max-width: 1024px) {
-  .proGrid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 540px) {
-  .proGrid { grid-template-columns: 1fr; }
-}
-
-.proCard {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 24px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: transform var(--transition), box-shadow var(--transition);
-  box-shadow: var(--shadow-sm);
-}
-
-.proCard:hover {
+.heroCta:hover {
+  background: #A86850;
   transform: translateY(-2px);
-  box-shadow: var(--shadow);
+  box-shadow: 0 6px 22px rgba(196,133,106,0.45);
 }
 
-.proIcon {
-  font-size: 1.8rem;
-  line-height: 1;
+/* Decorative circles */
+.heroRight {
+  position: relative;
+  flex-shrink: 0;
+  width: 240px;
+  height: 220px;
 }
 
-.proTitle {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: var(--text);
-  letter-spacing: -0.2px;
+.decorCircle {
+  position: absolute;
+  border-radius: 50%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  opacity: 0.88;
+  display: block;
 }
 
-.proBody {
-  font-size: 0.86rem;
-  color: var(--text-muted);
-  line-height: 1.6;
+.heroLine {
+  height: 1px;
+  background: #D4A574;
+  opacity: 0.4;
+  width: 100%;
 }
 
-/* ── CTA box ── */
-.ctaBox {
-  background: linear-gradient(135deg, var(--primary-light), #EEE0F5);
-  border-radius: var(--radius-lg);
-  padding: 40px 48px;
-  text-align: center;
+/* ══════════════════════════════════════════════════════
+   FILTER TABS
+══════════════════════════════════════════════════════ */
+.tabsWrap {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  justify-content: center;
+  padding: 44px 48px 0;
 }
 
-@media (max-width: 640px) {
-  .ctaBox { padding: 32px 20px; }
-  .pageHeader { margin-bottom: 36px; }
-  .section { margin-bottom: 44px; }
-}
-
-.ctaHeading {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: var(--primary-dark);
-  letter-spacing: -0.3px;
-}
-
-.ctaText {
-  font-size: 0.95rem;
-  color: var(--text-muted);
-}
-
-.ctaBtns {
+.tabs {
   display: flex;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 8px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.ctaBtnPrimary {
-  padding: 12px 28px;
-  background: var(--primary);
+.tab {
+  padding: 8px 20px;
+  border-radius: 50px;
+  background: #F5EAE3;
+  color: #9B7B6A;
+  border: 1px solid #EDD9CC;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+
+.tab:hover { background: #EDD9CC; }
+
+.tabActive {
+  background: #C4856A;
   color: #fff;
-  border-radius: var(--radius-full);
-  font-size: 0.95rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: all var(--transition);
-  box-shadow: 0 4px 16px rgba(212,135,122,0.3);
+  border-color: #C4856A;
 }
 
-.ctaBtnPrimary:hover {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
+.tabActive:hover { background: #C4856A; }
+
+/* ══════════════════════════════════════════════════════
+   CONTAINER
+══════════════════════════════════════════════════════ */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 48px 80px;
 }
 
-.ctaBtnSecondary {
-  padding: 12px 28px;
+/* ══════════════════════════════════════════════════════
+   CARDS GRID
+══════════════════════════════════════════════════════ */
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr));
+  gap: 28px;
+  margin-bottom: 72px;
+}
+
+/* ══════════════════════════════════════════════════════
+   SEASON CARD
+══════════════════════════════════════════════════════ */
+.seasonCard {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(180,120,80,0.10);
+  border: 1px solid rgba(196,133,106,0.12);
   background: #fff;
-  color: var(--primary-dark);
-  border-radius: var(--radius-full);
-  font-size: 0.95rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: all var(--transition);
-  border: 1.5px solid var(--primary);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: cardIn 0.4s ease both;
 }
 
-.ctaBtnSecondary:hover {
-  background: var(--primary-light);
-  transform: translateY(-1px);
+.seasonCard:nth-child(1) { animation-delay: 0s;    }
+.seasonCard:nth-child(2) { animation-delay: 0.08s; }
+.seasonCard:nth-child(3) { animation-delay: 0.16s; }
+.seasonCard:nth-child(4) { animation-delay: 0.24s; }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.seasonCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 56px rgba(180,120,80,0.18);
+}
+
+/* Card Header */
+.cardHeader {
+  height: 140px;
+  position: relative;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cardHeaderTop {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.toneBadge {
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 50px;
+  padding: 4px 12px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  font-variant: small-caps;
+  color: #3C2A1E;
+}
+
+.cardHeaderBottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.cardSeasonName {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0;
+}
+
+.swatchRow {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.7);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Card Body */
+.cardBody {
+  padding: 28px;
+}
+
+.tutorialLabel {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #C4856A;
+  margin-bottom: 16px;
+}
+
+/* ══════════════════════════════════════════════════════
+   ACCORDION
+══════════════════════════════════════════════════════ */
+.accordionList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.accordionItem {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #F0E0D0;
+}
+
+.accordionTrigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+
+.accordionTrigger:hover { background: #FDF5F0; }
+
+.accordionLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stepNum {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #C4856A, #A86850);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stepName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #3C2A1E;
+}
+
+.stepTime {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #C4856A;
+  background: rgba(196,133,106,0.10);
+  border-radius: 50px;
+  padding: 2px 8px;
+}
+
+.accordionArrow {
+  font-size: 0.75rem;
+  color: #9B7B6A;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.accordionArrowOpen {
+  transform: rotate(180deg);
+}
+
+.accordionContent {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.accordionContentOpen {
+  max-height: 300px;
+}
+
+.stepDesc {
+  font-size: 0.87rem;
+  color: #6B4C3B;
+  line-height: 1.68;
+  padding: 4px 16px 12px 56px;
+  margin: 0;
+}
+
+.stepTipBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 16px 16px 56px;
+  background: #FFF5EE;
+  border-left: 3px solid #C4856A;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  color: #8B5E3A;
+  line-height: 1.55;
+}
+
+.stepTipLabel {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #C4856A;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+/* ══════════════════════════════════════════════════════
+   PRO TIPS BANNER
+══════════════════════════════════════════════════════ */
+.tipsBanner {
+  background: #F5E6D0;
+  border-radius: 24px;
+  padding: 52px 48px;
+  text-align: center;
+}
+
+.tipsTitle {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2C1810;
+  margin: 0 0 32px;
+  letter-spacing: -0.3px;
+}
+
+.tipsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.tipCard {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.tipIcon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.tipTitle {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #3C2A1E;
+  margin: 0;
+}
+
+.tipBody {
+  font-size: 0.88rem;
+  color: #6B4C3B;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .tipsRow { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .heroInner  { padding: 40px 24px; min-height: 260px; }
+  .heroTitle  { font-size: 2.8rem; }
+  .heroRight  { display: none; }
+  .tabsWrap   { padding: 32px 20px 0; }
+  .container  { padding: 32px 20px 60px; }
+  .cardBody   { padding: 20px; }
+  .tipsBanner { padding: 36px 24px; }
+  .stepDesc, .stepTipBox { padding-left: 16px; margin-left: 16px; }
 }

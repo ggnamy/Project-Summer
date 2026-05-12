@@ -1,0 +1,208 @@
+.wrap {
+  margin-top: 12px;
+}
+
+/* ── Toggle link ── */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #C4856A;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: opacity 0.2s;
+}
+
+.toggle:hover { opacity: 0.75; }
+
+.arrow {
+  font-size: 0.75rem;
+  display: inline-block;
+  transition: transform 0.25s ease;
+  opacity: 0.8;
+}
+
+.arrowOpen {
+  transform: rotate(180deg);
+}
+
+/* ── Collapsible card ── */
+.card {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.35s ease, opacity 0.28s ease;
+}
+
+.cardOpen {
+  max-height: 700px;
+  opacity: 1;
+}
+
+/* Card inner wrapper (gives padding without affecting max-height animation) */
+.card > * {
+  padding-left: 0;
+}
+
+/* Card body styling */
+.cardTitle {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.85rem;
+  color: #9B7B6A;
+  letter-spacing: 0.05em;
+  font-variant: small-caps;
+  font-weight: 700;
+  margin: 14px 0 14px;
+}
+
+/* ── Example thumbnails ── */
+.examples {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.exampleWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.thumb {
+  width: 120px;
+  height: 160px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.tipImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.exLabel {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 50px;
+  padding: 3px 12px;
+}
+
+.exLabelGood {
+  background: #E8F5E8;
+  color: #4A8C4A;
+}
+
+.exLabelBad {
+  background: #FDE8E8;
+  color: #C44A4A;
+}
+
+.exCaption {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.72rem;
+  color: #9B7B6A;
+  text-align: center;
+}
+
+/* ── DO / DON'T inner card ── */
+.innerCard {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #F0E0D0;
+  padding: 20px 24px;
+}
+
+/* ── Two-column grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #F0E0D0;
+  padding: 18px 20px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── Column header badges ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 50px;
+  padding: 4px 14px;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.badgeGood {
+  background: #E8F5E8;
+  color: #4A8C4A;
+}
+
+.badgeBad {
+  background: #FDE8E8;
+  color: #C44A4A;
+}
+
+/* ── Tip rows ── */
+.tipList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.tipItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.82rem;
+  color: #6B4C3B;
+  line-height: 1.6;
+}
+
+.iconGood {
+  color: #4A8C4A;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.iconBad {
+  color: #C44A4A;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  .grid       { grid-template-columns: 1fr; }
+  .examples   { justify-content: center; }
+  .cardOpen   { max-height: 1000px; }
+}

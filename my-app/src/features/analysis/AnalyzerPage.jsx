@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { analyzePhotoWithTM, resetAnalysis, setPhoto } from './analysisSlice'
 import PhotoUploader from '../../components/PhotoUploader/PhotoUploader'
+import PhotoTips from '../../components/PhotoTips/PhotoTips'
+import { useTranslation } from '../../hooks/useTranslation'
 import styles from './AnalyzerPage.module.css'
 
 const TM_MODEL_URL = import.meta.env.VITE_TM_MODEL_URL
@@ -16,9 +18,9 @@ const SEASON_STYLES = {
 }
 
 const SCORE_BARS = [
-  { key: 'excellent', label: 'Excellent', color: '#52b788' },
-  { key: 'good',      label: 'Good',      color: '#D4877A' },
-  { key: 'fair',      label: 'Fair',      color: '#8B9EB0' },
+  { key: 'excellent', tKey: 'score_excellent', color: '#52b788' },
+  { key: 'good',      tKey: 'score_good',      color: '#D4877A' },
+  { key: 'fair',      tKey: 'score_fair',      color: '#8B9EB0' },
 ]
 
 function getTopCategory(scores) {
@@ -68,7 +70,7 @@ function getRecommendations(scores, season) {
     headline: 'Decent color harmony',
     intro: `Your colors show ${excellent.toFixed(1)}% Excellent compatibility with your ${sName} complexion. A few targeted adjustments could bring this significantly higher.`,
     tips: [
-      `Compare your current shades with the recommended ${sName} palette below`,
+      `Compare your current shades with the recommended ${sName} palette`,
       'Focus on tones that score highest in Excellent for future outfit choices',
       'Avoid shades that skew too far from your undertone',
     ],
@@ -86,7 +88,7 @@ function getRecommendations(scores, season) {
     headline: 'Significant color mismatch',
     intro: `A ${fair.toFixed(1)}% Fair score indicates these colors clash noticeably with your ${sName} skin tone. Switching to season-matched shades could visibly transform your look.`,
     tips: [
-      `Swap these colors for shades from your ${sName} palette shown below`,
+      `Swap these colors for shades from your ${sName} palette`,
       'Avoid colors that compete directly with your undertone, especially near your face',
       'Take the Color Quiz for a complete personal color season guide',
     ],
@@ -95,7 +97,7 @@ function getRecommendations(scores, season) {
     headline: 'Color refinement recommended',
     intro: `${fair.toFixed(1)}% Fair — these colors have some clashing with your ${sName} undertone. Switching to better-matched shades would noticeably enhance your complexion.`,
     tips: [
-      `Explore the recommended ${sName} colors in the palette section below`,
+      `Explore the recommended ${sName} colors`,
       'Try softer or warmer/cooler variations of your current shades first',
       'Take the Color Quiz for deeper guidance on your personal color season',
     ],
@@ -123,14 +125,14 @@ function loadTMScripts() {
   return _tmLoadPromise
 }
 
-/* ══════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════
    Main page
-══════════════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════════════ */
 export default function AnalyzerPage() {
   const dispatch = useDispatch()
   const {
-    season, undertone, skinTone, scores, scoringMode,
-    recommendations, avoidColors, status, error,
+    season, scores, scoringMode,
+    recommendations, status, error,
   } = useSelector((s) => s.analysis)
 
   const [modelStatus, setModelStatus]       = useState('loading')
@@ -191,19 +193,19 @@ export default function AnalyzerPage() {
     setImgLoaded(false)
   }, [dispatch])
 
-  const band  = scores ? getBand(scores)                        : null
-  const reco  = scores ? getRecommendations(scores, season)     : null
-  const style = season ? SEASON_STYLES[season]                  : null
+  const { t } = useTranslation()
+  const band  = scores ? getBand(scores)                    : null
+  const reco  = scores ? getRecommendations(scores, season) : null
+  const style = season ? SEASON_STYLES[season]              : null
 
   return (
     <main className={styles.main}>
       <div className="container">
 
         <div className={styles.pageHeader}>
-          <h1 className={styles.title}>Color Analysis</h1>
-          <p className={styles.subtitle}>
-            Upload a clear, well-lit selfie to discover your personal color season and get tailored recommendations.
-          </p>
+          <span className={styles.pageEyebrow}>{t('analyzer_eyebrow')}</span>
+          <h1 className={styles.title}>{t('analyzer_title')}</h1>
+          <p className={styles.subtitle}>{t('analyzer_sub')}</p>
         </div>
 
         <div className={styles.layout}>
@@ -222,15 +224,20 @@ export default function AnalyzerPage() {
               </div>
             )}
 
-            <PhotoUploader
-              onPhotoSelect={handlePhotoSelect}
-              preview={localPreview}
-              disabled={status === 'loading'}
-            />
+            <div className={styles.uploaderWrap}>
+              <PhotoUploader
+                onPhotoSelect={handlePhotoSelect}
+                preview={localPreview}
+                disabled={status === 'loading'}
+              />
+            </div>
+
             {localPreview && (
               <img ref={imgRef} src={localPreview} alt=""
                 onLoad={() => setImgLoaded(true)} style={{ display: 'none' }} />
             )}
+
+            <PhotoTips />
 
             <div className={styles.actions}>
               <button
@@ -239,12 +246,12 @@ export default function AnalyzerPage() {
                 disabled={!localPreview || !imgLoaded || status === 'loading' || modelStatus !== 'ready'}
               >
                 {status === 'loading'
-                  ? <><span className={styles.spinnerDark} /> Analyzing…</>
-                  : 'Analyze My Colors'}
+                  ? <><span className={styles.spinnerBtn} /> {t('btn_analyzing')}</>
+                  : t('btn_analyze_colors')}
               </button>
               {status !== 'idle' && (
                 <button className={styles.btnReset} onClick={handleReset} disabled={status === 'loading'}>
-                  Reset
+                  {t('btn_reset')}
                 </button>
               )}
             </div>
@@ -260,7 +267,7 @@ export default function AnalyzerPage() {
           {/* ══ RIGHT: Results panel ══ */}
           <section className={styles.resultsCol}>
 
-            {/* ── Idle empty state ── */}
+            {/* Idle empty state */}
             {status === 'idle' && (
               <div className={styles.emptyState}>
                 <div className={styles.emptyIconWrap}>
@@ -271,32 +278,32 @@ export default function AnalyzerPage() {
               </div>
             )}
 
-            {/* ── Loading ── */}
+            {/* Skeleton loading */}
             {status === 'loading' && (
-              <div className={styles.loadingState}>
-                <div className={styles.loadingDots}><span /><span /><span /></div>
-                <p className={styles.loadingText}>Analysing your photo…</p>
-                <p className={styles.loadingHint}>This may take a moment</p>
+              <div className={styles.skeletonStack}>
+                <div className={[styles.skelCard, styles.skelCardShort].join(' ')} />
+                <div className={[styles.skelCard, styles.skelCardMed].join(' ')} />
+                <div className={[styles.skelCard, styles.skelCardTall].join(' ')} />
               </div>
             )}
 
-            {/* ── Results ── */}
+            {/* Results */}
             {status === 'succeeded' && (
               <div className={styles.resultsStack}>
 
-                {/* 1. Match scores */}
+                {/* Match scores */}
                 {scores && (
                   <div className={styles.card}>
                     <div className={styles.cardHeader}>
-                      <span className={styles.cardTitle}>Match Scores</span>
+                      <span className={styles.cardTitle}>{t('match_scores')}</span>
                       <span className={scoringMode === 'tm' ? styles.badgeAI : styles.badgeRule}>
                         {scoringMode === 'tm' ? '✦ AI Model' : 'Color Analysis'}
                       </span>
                     </div>
                     <div className={styles.scoreBars}>
-                      {SCORE_BARS.map(({ key, label, color }) => (
+                      {SCORE_BARS.map(({ key, tKey, color }) => (
                         <div key={key} className={styles.scoreBarRow}>
-                          <span className={styles.scoreBarLabel}>{label}</span>
+                          <span className={styles.scoreBarLabel}>{t(tKey)}</span>
                           <div className={styles.scoreBarTrack}>
                             <div
                               className={styles.scoreBarFill}
@@ -310,7 +317,7 @@ export default function AnalyzerPage() {
                   </div>
                 )}
 
-                {/* 3. Interpretation */}
+                {/* Band interpretation */}
                 {band && (
                   <div className={[styles.card, styles[band.css]].join(' ')}>
                     <strong className={styles.bandLabel}>{band.label}</strong>
@@ -318,11 +325,11 @@ export default function AnalyzerPage() {
                   </div>
                 )}
 
-                {/* 4. Recommendations */}
+                {/* Recommendations */}
                 {reco && (
                   <div className={styles.card}>
                     <div className={styles.cardHeader}>
-                      <span className={styles.cardTitle}>💡 Recommendations</span>
+                      <span className={styles.cardTitle}>{t('recommendations')}</span>
                     </div>
                     <p className={styles.recoHeadline}>{reco.headline}</p>
                     <p className={styles.recoIntro}>{reco.intro}</p>
@@ -334,11 +341,10 @@ export default function AnalyzerPage() {
                         </li>
                       ))}
                     </ul>
-
                   </div>
                 )}
 
-                {/* 5. CTA */}
+                {/* CTA */}
                 {season && (
                   <Link to="/tryon" className={styles.ctaBtn}>
                     Take the Color Quiz →
@@ -349,7 +355,6 @@ export default function AnalyzerPage() {
             )}
 
           </section>
-
         </div>
       </div>
     </main>

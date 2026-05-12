@@ -2,11 +2,10 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(251, 249, 247, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-  /* safe area for notched iOS (portrait + landscape) */
+  background: rgba(253, 246, 240, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(234,217,206,0.6);
   padding-top: env(safe-area-inset-top);
 }
 
@@ -16,20 +15,20 @@
   height: var(--navbar-h);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  /* safe area horizontal padding for landscape notch */
   padding-left: max(24px, env(safe-area-inset-left));
   padding-right: max(24px, env(safe-area-inset-right));
 }
 
+/* ── Logo ── */
 .logo {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 1.2rem;
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
   font-weight: 700;
-  letter-spacing: -0.3px;
   color: var(--text);
+  letter-spacing: -0.3px;
   transition: color var(--transition);
 }
 
@@ -37,30 +36,53 @@
 
 .logoIcon {
   color: var(--primary);
-  font-size: 1.4rem;
+  font-size: 1.1rem;
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg);   opacity: 1; }
+  50%       { transform: scale(1.2) rotate(12deg); opacity: 0.8; }
 }
 
 /* ── Desktop nav links ── */
 .links {
   display: flex;
   list-style: none;
-  gap: 4px;
+  gap: 2px;
 }
 
 .link {
   display: inline-block;
-  padding: 6px 16px;
+  position: relative;
+  padding: 7px 16px;
   border-radius: var(--radius-full);
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--text-muted);
-  transition: all var(--transition);
+  transition: color var(--transition), background var(--transition);
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 16px;
+  right: 16px;
+  height: 1.5px;
+  background: var(--primary);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .link:hover {
   color: var(--text);
-  background: var(--bg-subtle);
+  background: var(--primary-light);
 }
+
+.link:hover::after { transform: scaleX(1); }
 
 .active {
   color: var(--primary-dark);
@@ -68,7 +90,21 @@
   font-weight: 600;
 }
 
-/* ── Hamburger button ── */
+.active::after { transform: scaleX(1); }
+
+/* ── Nav right group (links + language switcher + hamburger) ── */
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-left: auto;
+}
+
+.mobileLangWrap {
+  padding: 8px 16px 14px;
+}
+
+/* ── Hamburger ── */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -79,11 +115,11 @@
   padding: 9px;
   border: none;
   background: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   transition: background var(--transition);
 }
 
-.hamburger:hover { background: var(--bg-subtle); }
+.hamburger:hover { background: var(--primary-light); }
 
 .bar {
   display: block;
@@ -99,24 +135,24 @@
 .bar2Open { opacity: 0; transform: scaleX(0); }
 .bar3Open { transform: translateY(-7px) rotate(-45deg); }
 
-/* ── Mobile dropdown menu ── */
+/* ── Mobile dropdown ── */
 .mobileMenu {
   overflow: hidden;
   max-height: 0;
-  transition: max-height 0.25s ease;
-  background: rgba(251, 249, 247, 0.97);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  transition: max-height 0.28s ease;
+  background: rgba(253,246,240,0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .mobileMenuOpen {
-  max-height: 320px;
+  max-height: 400px;
   border-bottom: 1px solid var(--border);
 }
 
 .mobileLinks {
   list-style: none;
-  padding: 8px 16px 12px;
+  padding: 10px 16px 14px;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -124,7 +160,7 @@
 
 .mobileLink {
   display: block;
-  padding: 12px 16px;
+  padding: 12px 18px;
   border-radius: var(--radius);
   font-size: 1rem;
   font-weight: 500;
@@ -134,18 +170,18 @@
 
 .mobileLink:hover {
   color: var(--text);
-  background: var(--bg-subtle);
+  background: var(--primary-light);
 }
 
 .mobileLinkActive {
   color: var(--primary-dark);
   background: var(--primary-light);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* ── Responsive ── */
 @media (max-width: 640px) {
-  .links    { display: none; }
+  .links     { display: none; }
   .hamburger { display: flex; }
 }
 
