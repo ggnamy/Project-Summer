@@ -1,16 +1,95 @@
-# React + Vite
+# AuraColor — AI Personal Color Analysis
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React web application that discovers your personal color season using AI photo analysis, an interactive quiz, and a community tips board.
 
-Currently, two official plugins are available:
+## Team
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Name | Student ID | Email |
+|---|---|---|
+| Godchagorn K. | — | godchagorn_k@cmu.ac.th |
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Feature | Description |
+|---|---|
+| AI Analyzer | Upload a photo — Teachable Machine classifies your color-match quality |
+| Color Quiz | 5-question quiz determines your season (Spring / Summer / Autumn / Winter) |
+| Community Color Tips | Browse, post, edit, and delete beauty tips by color season (full CRUD via REST API) |
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Layer | Technology |
+|---|---|
+| UI Framework | React 18 + Vite |
+| State Management | Redux Toolkit |
+| Routing | React Router v6 (dynamic route `/tips/:id`) |
+| Styling | CSS Modules |
+| AI Model | TensorFlow.js + Teachable Machine |
+| REST API | MockAPI.io (GET, POST, PUT, DELETE) |
+| Deployment | Vercel |
+
+## Getting Started
+
+### 1. Install dependencies
+
+```bash
+cd my-app
+npm install
+```
+
+### 2. Configure environment variables
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env`:
+
+| Variable | Value |
+|---|---|
+| `VITE_TM_MODEL_URL` | Teachable Machine model URL *(with trailing slash)* |
+| `VITE_GEMINI_API_KEY` | Google Gemini API key |
+| `VITE_API_URL` | MockAPI.io base URL e.g. `https://abc123.mockapi.io/api/v1` |
+
+### 3. Set up MockAPI resource
+
+1. Create a free account at [mockapi.io](https://mockapi.io)
+2. Create a new project and add a **`tips`** resource
+3. Add fields: `title` (String), `season` (String), `body` (String)
+4. Copy the base URL (without `/tips`) into `VITE_API_URL`
+
+### 4. Start the dev server
+
+```bash
+npm run dev
+```
+
+## Project Structure
+
+```
+src/
+├── features/
+│   ├── analysis/        # AI photo analyzer + Redux slice
+│   ├── quiz/            # Personal color quiz (5 questions)
+│   ├── tips/            # Community Color Tips CRUD (tipsAPI, tipsSlice, pages)
+│   └── tryon/           # Color try-on palette
+├── pages/               # HomePage, NotFoundPage
+├── components/          # Navbar, PhotoUploader, PhotoTips
+├── locales/             # en.json
+├── app/                 # Redux store, languageSlice
+└── hooks/               # useTranslation, useAuraScore
+```
+
+## Routes
+
+| Path | Page |
+|---|---|
+| `/` | Home |
+| `/analyzer` | AI Color Analyzer |
+| `/tryon` | Color Quiz |
+| `/tips` | Community Color Tips (list + post form) |
+| `/tips/:id` | Tip Detail + Edit / Delete |
+
+## Live URL
+
+*(Add deployed URL here after deploying to Vercel)*

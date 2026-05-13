@@ -5,7 +5,7 @@ import styles from './HomePage.module.css'
 const FEATURES = [
   { icon: '✦', titleKey: 'home_feat1_title', descKey: 'home_feat1_desc', link: '/analyzer', ctaKey: 'btn_analyze',    tagKey: 'nav_analyzer' },
   { icon: '🎨', titleKey: 'home_feat2_title', descKey: 'home_feat2_desc', link: '/tryon',    ctaKey: 'btn_quiz',       tagKey: 'nav_quiz'     },
-  { icon: '💄', titleKey: 'home_feat3_title', descKey: 'home_feat3_desc', link: '/looks',    ctaKey: 'home_feat3_cta', tagKey: 'nav_guide'    },
+  { icon: '💬', titleKey: 'home_feat3_title', descKey: 'home_feat3_desc', link: '/tips',     ctaKey: 'home_feat3_cta', tagKey: 'nav_tips'     },
 ]
 
 const SEASONS = [

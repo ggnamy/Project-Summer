@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { useState } from 'react'
 import { useTranslation } from '../../hooks/useTranslation'
-import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher'
 import styles from './Navbar.module.css'
 
 export default function Navbar() {
@@ -12,7 +11,7 @@ export default function Navbar() {
     { to: '/',         label: t('nav_home')     },
     { to: '/analyzer', label: t('nav_analyzer') },
     { to: '/tryon',    label: t('nav_quiz')      },
-    { to: '/looks',    label: t('nav_guide')     },
+    { to: '/tips',     label: t('nav_tips')      },
   ]
 
   return (
@@ -39,7 +38,6 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
-          <LanguageSwitcher />
           <button
             className={styles.hamburger}
             onClick={() => setOpen(o => !o)}
@@ -73,9 +71,6 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
-        <div className={styles.mobileLangWrap}>
-          <LanguageSwitcher />
-        </div>
       </div>
     </header>
   )
