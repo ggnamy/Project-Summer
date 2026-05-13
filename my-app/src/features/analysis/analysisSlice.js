@@ -3,14 +3,11 @@ import { callClaudeAnalysis } from './analysisAPI'
 
 export const analyzePhotoWithTM = createAsyncThunk(
   'analysis/analyzePhotoWithTM',
-  async ({ base64Image, mediaType, label, probability, allPredictions, scores }, { rejectWithValue }) => {
+  async ({ base64Image, mediaType, scores }, { rejectWithValue }) => {
     try {
       const colorResult = await callClaudeAnalysis(base64Image, mediaType)
       return {
         ...colorResult,
-        label,
-        probability,
-        allPredictions,
         scores,
         scoringMode: 'tm',
         makeupReason: null,
@@ -33,9 +30,6 @@ const analysisSlice = createSlice({
     skinTone: null,
     recommendations: null,
     avoidColors: null,
-    label: null,
-    probability: null,
-    allPredictions: null,
     status: 'idle',
     error: null,
   },
@@ -48,7 +42,6 @@ const analysisSlice = createSlice({
         photo: null, undertone: null, season: null, scores: null,
         scoringMode: null, makeupReason: null, skinTone: null,
         recommendations: null, avoidColors: null,
-        label: null, probability: null, allPredictions: null,
         status: 'idle', error: null,
       })
     },
@@ -70,9 +63,6 @@ const analysisSlice = createSlice({
         state.skinTone        = p.skinTone
         state.recommendations = p.recommendations
         state.avoidColors     = p.avoidColors
-        state.label           = p.label
-        state.probability     = p.probability
-        state.allPredictions  = p.allPredictions
       })
       .addCase(analyzePhotoWithTM.rejected, (state, action) => {
         state.status = 'failed'

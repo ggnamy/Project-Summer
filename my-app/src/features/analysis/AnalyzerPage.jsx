@@ -152,13 +152,10 @@ export default function AnalyzerPage() {
 
     const round     = (v) => Math.round(v * 1000) / 10
     const newScores = { excellent: round(excellent), good: round(good), fair: round(fair) }
-    const preds     = predictions.map(({ className, probability }) => ({ className, probability }))
-    const base64    = localPreview.split(',')[1]
+    const base64 = localPreview.split(',')[1]
 
     dispatch(analyzePhotoWithTM({
-      base64Image: base64, mediaType: localMediaType,
-      label: top.className, probability: top.probability,
-      allPredictions: preds, scores: newScores,
+      base64Image: base64, mediaType: localMediaType, scores: newScores,
     }))
   }, [localPreview, localMediaType, imgLoaded, modelStatus, dispatch])
 

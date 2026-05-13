@@ -4,7 +4,6 @@ const tryonSlice = createSlice({
   name: 'tryon',
   initialState: {
     selectedColors: {},
-    liveScore: 0,
   },
   reducers: {
     setColor(state, action) {
@@ -17,13 +16,9 @@ const tryonSlice = createSlice({
     },
     resetColors(state) {
       state.selectedColors = {}
-      state.liveScore = 0
-    },
-    setLiveScore(state, action) {
-      state.liveScore = action.payload
     },
   },
 })
 
-export const { setColor, resetColors, setLiveScore } = tryonSlice.actions
+export const { setColor, resetColors } = tryonSlice.actions
 export default tryonSlice.reducer

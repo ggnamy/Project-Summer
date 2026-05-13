@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { answerQuestion, goBack, resetQuiz, QUESTIONS, SEASON_DATA } from './quizSlice'
+import { answerQuestion, goBack, resetQuiz, QUESTIONS } from './quizSlice'
 import { useTranslation } from '../../hooks/useTranslation'
 import styles from './QuizPage.module.css'
 
