@@ -18,9 +18,9 @@ const SEASON_STYLES = {
 }
 
 const SCORE_BARS = [
-  { key: 'excellent', tKey: 'score_excellent', color: '#52b788' },
-  { key: 'good',      tKey: 'score_good',      color: '#D4877A' },
-  { key: 'fair',      tKey: 'score_fair',      color: '#8B9EB0' },
+  { key: 'excellent', tKey: 'analyzer_excellent', color: '#52b788' },
+  { key: 'good',      tKey: 'analyzer_good',      color: '#D4877A' },
+  { key: 'fair',      tKey: 'analyzer_fair',      color: '#8B9EB0' },
 ]
 
 function getTopCategory(scores) {
@@ -34,73 +34,48 @@ function getBand(scores) {
   const { excellent, good, fair } = scores
   const top = getTopCategory(scores)
   if (top === 'excellent') {
-    if (excellent >= 90) return { label: 'Perfect Harmony ✨', css: 'bandPerfect',  desc: `${excellent.toFixed(1)}% Excellent — these colors are an outstanding match for your skin tone.` }
-    if (excellent >= 70) return { label: 'Strong Match 💚',    css: 'bandPerfect',  desc: `${excellent.toFixed(1)}% Excellent — these colors complement your complexion beautifully.` }
-    return                      { label: 'Good Fit 👍',         css: 'bandGoodFit', desc: `${excellent.toFixed(1)}% Excellent — these colors work reasonably well with your skin tone.` }
+    if (excellent >= 90) return { labelKey: 'band_perfect_label', css: 'bandPerfect',    descKey: 'band_perfect_desc', vars: { pct: excellent.toFixed(1) } }
+    if (excellent >= 70) return { labelKey: 'band_strong_label',  css: 'bandPerfect',    descKey: 'band_strong_desc',  vars: { pct: excellent.toFixed(1) } }
+    return                      { labelKey: 'band_goodfit_label', css: 'bandGoodFit',    descKey: 'band_goodfit_desc', vars: { pct: excellent.toFixed(1) } }
   }
-  if (top === 'good') return { label: 'Decent Fit 🔵', css: 'bandGoodFit',    desc: `${good.toFixed(1)}% Good — moderate compatibility. Some adjustments could improve the match.` }
-  if (fair >= 80)    return { label: 'Strong Clash 🔴', css: 'bandClash',      desc: `${fair.toFixed(1)}% Fair — significant color clash detected with your skin tone.` }
-  return                    { label: 'Fair Match ⚠️',   css: 'bandMismatched', desc: `${fair.toFixed(1)}% Fair — slight clashing detected. Season-matched colors are recommended.` }
+  if (top === 'good') return { labelKey: 'band_decent_label', css: 'bandGoodFit',   descKey: 'band_decent_desc', vars: { pct: good.toFixed(1) } }
+  if (fair >= 80)    return { labelKey: 'band_clash_label',  css: 'bandClash',      descKey: 'band_clash_desc',  vars: { pct: fair.toFixed(1) } }
+  return                    { labelKey: 'band_fair_label',   css: 'bandMismatched', descKey: 'band_fair_desc',   vars: { pct: fair.toFixed(1) } }
 }
 
 function getRecommendations(scores, season) {
   const { excellent, good, fair } = scores
-  const top   = getTopCategory(scores)
-  const sName = season ?? 'your'
+  const top = getTopCategory(scores)
 
   if (excellent >= 90) return {
-    headline: 'Near-perfect color harmony!',
-    intro: `A ${excellent.toFixed(1)}% Excellent score means these colors are exceptionally well-suited to your ${sName} complexion — your choices are outstanding.`,
-    tips: [
-      `Your ${sName} undertone absolutely loves these colors — keep wearing this palette`,
-      'Add accessories in similar tones to extend the harmonious effect',
-      'Try bolder or more saturated versions of these shades for special occasions',
-    ],
+    headlineKey: 'reco_perfect_headline',
+    introKey: 'reco_perfect_intro', vars: { pct: excellent.toFixed(1), season },
+    tipKeys: ['reco_tip_perfect1', 'reco_tip_perfect2', 'reco_tip_perfect3'],
   }
   if (excellent >= 70) return {
-    headline: 'Strong color harmony',
-    intro: `${excellent.toFixed(1)}% Excellent — these colors work beautifully for your ${sName} complexion. Your choices are well-suited to your undertone.`,
-    tips: [
-      `These shades align well with your ${sName} undertone — wear them confidently`,
-      'Combine the best-performing tones together for maximum polish',
-      'Explore deeper or lighter variations to add dimension without losing harmony',
-    ],
+    headlineKey: 'reco_strong_headline',
+    introKey: 'reco_strong_intro', vars: { pct: excellent.toFixed(1), season },
+    tipKeys: ['reco_tip_strong1', 'reco_tip_strong2', 'reco_tip_strong3'],
   }
   if (top === 'excellent') return {
-    headline: 'Decent color harmony',
-    intro: `Your colors show ${excellent.toFixed(1)}% Excellent compatibility with your ${sName} complexion. A few targeted adjustments could bring this significantly higher.`,
-    tips: [
-      `Compare your current shades with the recommended ${sName} palette`,
-      'Focus on tones that score highest in Excellent for future outfit choices',
-      'Avoid shades that skew too far from your undertone',
-    ],
+    headlineKey: 'reco_decent_headline',
+    introKey: 'reco_decent_intro', vars: { pct: excellent.toFixed(1), season },
+    tipKeys: ['reco_tip_decent1', 'reco_tip_decent2', 'reco_tip_decent3'],
   }
   if (top === 'good') return {
-    headline: 'Good compatibility, room to grow',
-    intro: `${good.toFixed(1)}% Good compatibility detected for your ${sName} skin tone. Small palette adjustments could push this into the Excellent range.`,
-    tips: [
-      `Shift gradually toward your core ${sName} palette for more vibrant results`,
-      'Pair the best-matching shades together to maximize visual impact',
-      'Use the recommended color swatches below as a starting reference',
-    ],
+    headlineKey: 'reco_good_headline',
+    introKey: 'reco_good_intro', vars: { pct: good.toFixed(1), season },
+    tipKeys: ['reco_tip_good1', 'reco_tip_good2', 'reco_tip_good3'],
   }
   if (fair >= 80) return {
-    headline: 'Significant color mismatch',
-    intro: `A ${fair.toFixed(1)}% Fair score indicates these colors clash noticeably with your ${sName} skin tone. Switching to season-matched shades could visibly transform your look.`,
-    tips: [
-      `Swap these colors for shades from your ${sName} palette`,
-      'Avoid colors that compete directly with your undertone, especially near your face',
-      'Take the Color Quiz for a complete personal color season guide',
-    ],
+    headlineKey: 'reco_clash_headline',
+    introKey: 'reco_clash_intro', vars: { pct: fair.toFixed(1), season },
+    tipKeys: ['reco_tip_clash1', 'reco_tip_clash2', 'reco_tip_clash3'],
   }
   return {
-    headline: 'Color refinement recommended',
-    intro: `${fair.toFixed(1)}% Fair — these colors have some clashing with your ${sName} undertone. Switching to better-matched shades would noticeably enhance your complexion.`,
-    tips: [
-      `Explore the recommended ${sName} colors`,
-      'Try softer or warmer/cooler variations of your current shades first',
-      'Take the Color Quiz for deeper guidance on your personal color season',
-    ],
+    headlineKey: 'reco_fair_headline',
+    introKey: 'reco_fair_intro', vars: { pct: fair.toFixed(1), season },
+    tipKeys: ['reco_tip_fair1', 'reco_tip_fair2', 'reco_tip_fair3'],
   }
 }
 
@@ -194,16 +169,17 @@ export default function AnalyzerPage() {
   }, [dispatch])
 
   const { t } = useTranslation()
-  const band  = scores ? getBand(scores)                    : null
-  const reco  = scores ? getRecommendations(scores, season) : null
-  const style = season ? SEASON_STYLES[season]              : null
+  const seasonT = season ? t(`season_${season.toLowerCase()}`) : ''
+  const band    = scores ? getBand(scores)                          : null
+  const reco    = scores ? getRecommendations(scores, seasonT)      : null
+  const style   = season ? SEASON_STYLES[season]                    : null
 
   return (
     <main className={styles.main}>
       <div className="container">
 
         <div className={styles.pageHeader}>
-          <span className={styles.pageEyebrow}>{t('analyzer_eyebrow')}</span>
+          <span className={styles.pageEyebrow}>{t('analyzer_badge')}</span>
           <h1 className={styles.title}>{t('analyzer_title')}</h1>
           <p className={styles.subtitle}>{t('analyzer_sub')}</p>
         </div>
@@ -215,7 +191,7 @@ export default function AnalyzerPage() {
 
             {modelStatus === 'loading' && (
               <div className={styles.modelLoading}>
-                <span className={styles.spinner} /> Loading AI model…
+                <span className={styles.spinner} /> {t('analyzer_loading_model')}
               </div>
             )}
             {modelStatus === 'error' && (
@@ -258,7 +234,7 @@ export default function AnalyzerPage() {
 
             {error && (
               <div className={styles.errorBox} role="alert">
-                <strong>Analysis failed:</strong> {error}
+                <strong>{t('analyzer_error_prefix')}</strong> {error}
               </div>
             )}
 
@@ -273,8 +249,8 @@ export default function AnalyzerPage() {
                 <div className={styles.emptyIconWrap}>
                   <span className={styles.emptyIcon}>✦</span>
                 </div>
-                <p className={styles.emptyTitle}>Your results will appear here</p>
-                <p className={styles.emptyHint}>Upload a photo and click Analyze to get started</p>
+                <p className={styles.emptyTitle}>{t('analyzer_results_empty_title')}</p>
+                <p className={styles.emptyHint}>{t('analyzer_results_empty_sub')}</p>
               </div>
             )}
 
@@ -295,9 +271,9 @@ export default function AnalyzerPage() {
                 {scores && (
                   <div className={styles.card}>
                     <div className={styles.cardHeader}>
-                      <span className={styles.cardTitle}>{t('match_scores')}</span>
+                      <span className={styles.cardTitle}>{t('analyzer_match_scores')}</span>
                       <span className={scoringMode === 'tm' ? styles.badgeAI : styles.badgeRule}>
-                        {scoringMode === 'tm' ? '✦ AI Model' : 'Color Analysis'}
+                        {scoringMode === 'tm' ? t('analyzer_ai_badge') : t('analyzer_color_badge')}
                       </span>
                     </div>
                     <div className={styles.scoreBars}>
@@ -320,8 +296,8 @@ export default function AnalyzerPage() {
                 {/* Band interpretation */}
                 {band && (
                   <div className={[styles.card, styles[band.css]].join(' ')}>
-                    <strong className={styles.bandLabel}>{band.label}</strong>
-                    <p className={styles.bandDesc}>{band.desc}</p>
+                    <strong className={styles.bandLabel}>{t(band.labelKey)}</strong>
+                    <p className={styles.bandDesc}>{t(band.descKey, band.vars)}</p>
                   </div>
                 )}
 
@@ -329,15 +305,15 @@ export default function AnalyzerPage() {
                 {reco && (
                   <div className={styles.card}>
                     <div className={styles.cardHeader}>
-                      <span className={styles.cardTitle}>{t('recommendations')}</span>
+                      <span className={styles.cardTitle}>{t('analyzer_recommendations')}</span>
                     </div>
-                    <p className={styles.recoHeadline}>{reco.headline}</p>
-                    <p className={styles.recoIntro}>{reco.intro}</p>
+                    <p className={styles.recoHeadline}>{t(reco.headlineKey)}</p>
+                    <p className={styles.recoIntro}>{t(reco.introKey, reco.vars)}</p>
                     <ul className={styles.tipList}>
-                      {reco.tips.map((tip, i) => (
+                      {reco.tipKeys.map((key, i) => (
                         <li key={i} className={styles.tipItem}>
                           <span className={styles.tipCheck}>✓</span>
-                          <span>{tip}</span>
+                          <span>{t(key, { season: reco.vars.season })}</span>
                         </li>
                       ))}
                     </ul>
@@ -347,7 +323,7 @@ export default function AnalyzerPage() {
                 {/* CTA */}
                 {season && (
                   <Link to="/tryon" className={styles.ctaBtn}>
-                    Take the Color Quiz →
+                    {t('analyzer_cta_quiz')}
                   </Link>
                 )}
 

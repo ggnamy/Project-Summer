@@ -7,9 +7,6 @@ import styles from './LanguageSwitcher.module.css'
 const LANGUAGES = [
   { code: 'EN', flag: '🇺🇸', name: 'English' },
   { code: 'TH', flag: '🇹🇭', name: 'ภาษาไทย' },
-  { code: 'ZH', flag: '🇨🇳', name: '中文' },
-  { code: 'JA', flag: '🇯🇵', name: '日本語' },
-  { code: 'KO', flag: '🇰🇷', name: '한국어' },
 ]
 
 export default function LanguageSwitcher() {

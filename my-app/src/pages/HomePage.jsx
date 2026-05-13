@@ -3,53 +3,16 @@ import { useTranslation } from '../hooks/useTranslation'
 import styles from './HomePage.module.css'
 
 const FEATURES = [
-  {
-    icon: '✦',
-    tag: 'AI Analyzer',
-    title: 'Photo Color Analysis',
-    desc: 'Upload a selfie and our AI reads your skin undertone to reveal your personal color season instantly.',
-    link: '/analyzer',
-    cta: 'Analyze My Photo →',
-  },
-  {
-    icon: '🎨',
-    tag: 'Color Quiz',
-    title: 'Guided Season Quiz',
-    desc: '5 quick questions about your natural features — veins, skin tone, hair — to pinpoint your season.',
-    link: '/tryon',
-    cta: 'Take the Quiz →',
-  },
-  {
-    icon: '💄',
-    tag: 'Beauty Guide',
-    title: 'Expert Beauty Tips',
-    desc: 'Step-by-step tutorials and pro tips curated for each color season and skin tone.',
-    link: '/looks',
-    cta: 'View Guide →',
-  },
+  { icon: '✦', titleKey: 'home_feat1_title', descKey: 'home_feat1_desc', link: '/analyzer', ctaKey: 'btn_analyze',    tagKey: 'nav_analyzer' },
+  { icon: '🎨', titleKey: 'home_feat2_title', descKey: 'home_feat2_desc', link: '/tryon',    ctaKey: 'btn_quiz',       tagKey: 'nav_quiz'     },
+  { icon: '💄', titleKey: 'home_feat3_title', descKey: 'home_feat3_desc', link: '/looks',    ctaKey: 'home_feat3_cta', tagKey: 'nav_guide'    },
 ]
 
 const SEASONS = [
-  {
-    name: 'Spring',  tone: 'Warm & Bright', labelColor: '#C4724A',
-    gradient: 'linear-gradient(135deg, #FFE8D6, #FFD6B0)',
-    colors: ['#F7C59F','#F4A261','#E76F51','#A8DADC','#95C4C1'],
-  },
-  {
-    name: 'Summer',  tone: 'Cool & Soft',   labelColor: '#6B8CAE',
-    gradient: 'linear-gradient(135deg, #E8EFF7, #D4E4F4)',
-    colors: ['#B8D4E8','#C9B8D8','#E8C4D0','#A8C4D8','#D4C4E4'],
-  },
-  {
-    name: 'Autumn',  tone: 'Warm & Deep',   labelColor: '#8B5E3C',
-    gradient: 'linear-gradient(135deg, #F5E6D0, #EDD5A8)',
-    colors: ['#C4874A','#8B6340','#C4A951','#7A8B40','#A0522D'],
-  },
-  {
-    name: 'Winter',  tone: 'Cool & Bold',   labelColor: '#3A5068',
-    gradient: 'linear-gradient(135deg, #E8EEF4, #D0DCE8)',
-    colors: ['#4A6FA5','#8B1A2E','#2E6B5A','#5A3A7A','#C8D4E0'],
-  },
+  { nameKey: 'season_spring', toneKey: 'warm_bright', img: '/images/seasons/spring-home.png' },
+  { nameKey: 'season_summer', toneKey: 'cool_soft',   img: '/images/seasons/summer-home.png' },
+  { nameKey: 'season_autumn', toneKey: 'warm_deep',   img: '/images/seasons/autumn-home.png' },
+  { nameKey: 'season_winter', toneKey: 'cool_bold',   img: '/images/seasons/winter-home.png' },
 ]
 
 export default function HomePage() {
@@ -90,27 +53,27 @@ export default function HomePage() {
           <span className={styles.sparkle} style={{ bottom: '20%', left: '2%', animationDelay: '1.5s' }}>✦</span>
           <span className={styles.sparkle} style={{ bottom: '8%', right: '16%', animationDelay: '0.4s' }}>✦</span>
 
-          {/* Card 1 — Spring swatches, top-left, -6deg */}
+          {/* Card 1 — Lip & Blush shades */}
           <div className={[styles.moodCard, styles.moodCard1].join(' ')}>
-            <span className={styles.moodCardSeason}>Spring</span>
+            <span className={styles.moodCardSeason}>{t('home_mood_card1_name')}</span>
             <div className={styles.moodCardDots}>
-              {['#F7C59F','#F4A261','#E76F51','#A8DADC','#95C4C1'].map((c) => (
+              {['#C0392B','#E74C7B','#F4A261','#D4877A','#F9C6C6'].map((c) => (
                 <span key={c} className={styles.moodDot} style={{ background: c }} />
               ))}
             </div>
-            <span className={styles.moodCardTag}>Warm &amp; Bright</span>
+            <span className={styles.moodCardTag}>{t('home_mood_card1_tag')}</span>
           </div>
 
-          {/* Card 2 — Color wheel, center, slight tilt */}
+          {/* Card 2 — Color wheel */}
           <div className={[styles.moodCard, styles.moodCard2].join(' ')}>
             <div className={styles.colorWheel} />
-            <span className={styles.moodCard2Label}>Color Seasons</span>
+            <span className={styles.moodCard2Label}>{t('home_mood_card2_label')}</span>
           </div>
 
-          {/* Card 3 — CTA, bottom-right, +4deg */}
+          {/* Card 3 — Beauty tips CTA */}
           <div className={[styles.moodCard, styles.moodCard3].join(' ')}>
-            <span className={styles.moodCard3Eye}>✦ Discover</span>
-            <span className={styles.moodCard3Title}>Find Your Season</span>
+            <span className={styles.moodCard3Eye}>{t('home_mood_card3_eye')}</span>
+            <span className={styles.moodCard3Title}>{t('home_mood_card3_title')}</span>
           </div>
         </div>
       </section>
@@ -120,14 +83,14 @@ export default function HomePage() {
         <div className="container">
           <div className={styles.featuresGrid}>
             {FEATURES.map((f) => (
-              <div key={f.tag} className={styles.featureCard}>
+              <div key={f.titleKey} className={styles.featureCard}>
                 <div className={styles.featureIconWrap}>
                   <span className={styles.featureIcon}>{f.icon}</span>
                 </div>
-                <span className={styles.featureTag}>{f.tag}</span>
-                <h3 className={styles.featureTitle}>{f.title}</h3>
-                <p className={styles.featureDesc}>{f.desc}</p>
-                <Link to={f.link} className={styles.featureLink}>{f.cta}</Link>
+                <span className={styles.featureTag}>{t(f.tagKey)}</span>
+                <h3 className={styles.featureTitle}>{t(f.titleKey)}</h3>
+                <p className={styles.featureDesc}>{t(f.descKey)}</p>
+                <Link to={f.link} className={styles.featureLink}>{t(f.ctaKey)}</Link>
               </div>
             ))}
           </div>
@@ -140,7 +103,7 @@ export default function HomePage() {
           <div className={styles.seasonLayout}>
 
             <div className={styles.seasonText}>
-              <span className={styles.eyebrow}>The Science of Color</span>
+              <span className={styles.eyebrow}>{t('home_science_badge')}</span>
               <h2 className={styles.seasonHeading}>{t('section_what')}</h2>
               <p className={styles.seasonBody}>{t('section_what_body1')}</p>
               <p className={styles.seasonBody}>{t('section_what_body2')}</p>
@@ -151,17 +114,11 @@ export default function HomePage() {
 
             <div className={styles.seasonCards}>
               {SEASONS.map((s) => (
-                <div key={s.name} className={styles.seasonCard}>
-                  <div className={styles.seasonCardTop} style={{ background: s.gradient }}>
-                    <span className={styles.seasonCardName} style={{ color: s.labelColor }}>{s.name}</span>
-                  </div>
-                  <div className={styles.seasonCardBottom}>
-                    <span className={styles.seasonCardTone}>{s.tone}</span>
-                    <div className={styles.seasonDots}>
-                      {s.colors.map((c) => (
-                        <span key={c} className={styles.seasonDot} style={{ background: c }} />
-                      ))}
-                    </div>
+                <div key={s.nameKey} className={styles.seasonCard}>
+                  <img src={s.img} alt={t(s.nameKey)} className={styles.seasonCardImg} />
+                  <div className={styles.seasonCardOverlay}>
+                    <span className={styles.seasonCardName}>{t(s.nameKey)}</span>
+                    <span className={styles.seasonCardTone}>{t(s.toneKey)}</span>
                   </div>
                 </div>
               ))}

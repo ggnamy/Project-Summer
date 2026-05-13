@@ -36,8 +36,9 @@ const SEASON_OVERLAY = {
    Result screen
 ───────────────────────────────────────────────────────────── */
 function QuizResult({ result, onRetake }) {
-  const data = SEASON_DATA[result.season]
   const { t } = useTranslation()
+  const undertoneKey = result.undertone === 'WARM TONE' ? 'result_warm_tone' : 'result_cool_tone'
+  const descKey = `${result.season.toLowerCase()}_desc`
 
   return (
     <main className={styles.resultPage}>
@@ -50,7 +51,7 @@ function QuizResult({ result, onRetake }) {
       <div className="container">
         <div className={styles.resultContent}>
 
-          <p className={styles.resultEyebrow}>{t('result_eyebrow')}</p>
+          <p className={styles.resultEyebrow}>{t('result_subtitle')}</p>
 
           <div className={styles.resultHero}>
             <img
@@ -64,13 +65,13 @@ function QuizResult({ result, onRetake }) {
               aria-hidden="true"
             />
             <div className={styles.resultHeroText}>
-              <span className={styles.resultUndertoneBadge}>{result.undertone}</span>
-              <h1 className={styles.resultSeasonName}>{result.season}</h1>
+              <span className={styles.resultUndertoneBadge}>{t(undertoneKey)}</span>
+              <h1 className={styles.resultSeasonName}>{t(`season_${result.season.toLowerCase()}`)}</h1>
             </div>
           </div>
 
           <div className={styles.descQuote}>
-            <p className={styles.descText}>{data.description}</p>
+            <p className={styles.descText}>{t(descKey)}</p>
           </div>
 
           <div className={styles.resultBtns}>
@@ -107,6 +108,7 @@ export default function QuizPage() {
   }
 
   const question = QUESTIONS[currentQuestion]
+  const qTextKey = `q${currentQuestion + 1}_text`
 
   return (
     <div className={styles.pageOuter}>
@@ -127,7 +129,7 @@ export default function QuizPage() {
               <div className={styles.qNumLine} />
             </div>
 
-            <h2 className={styles.qText}>{question.text}</h2>
+            <h2 className={styles.qText}>{t(qTextKey)}</h2>
 
             <div className={styles.progressSection}>
               <span className={styles.progressLabel}>
@@ -165,6 +167,7 @@ export default function QuizPage() {
           <div className={styles.choices}>
             {question.choices.map((choice) => {
               const imgData = IMAGE_MAP[`${currentQuestion}-${choice.letter}`]
+              const choiceKey = `q${currentQuestion + 1}_${choice.letter.toLowerCase()}`
               return (
                 <button
                   key={choice.letter}
@@ -178,7 +181,7 @@ export default function QuizPage() {
                     {imgData && (
                       <img
                         src={imgData.src}
-                        alt={choice.text}
+                        alt={t(choiceKey)}
                         className={styles.cardPhoto}
                       />
                     )}
@@ -187,8 +190,7 @@ export default function QuizPage() {
                   <div className={styles.cardTextWrap}>
                     <span className={styles.cardLetter}>{choice.letter}</span>
                     <div className={styles.cardMain}>
-                      <span className={styles.cardText}>{choice.text}</span>
-                      {choice.hint && <span className={styles.cardHint}>{choice.hint}</span>}
+                      <span className={styles.cardText}>{t(choiceKey)}</span>
                     </div>
                     <span className={styles.cardArrow}>→</span>
                   </div>

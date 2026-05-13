@@ -1,26 +1,13 @@
 import { useState } from 'react'
+import { useTranslation } from '../../hooks/useTranslation'
 import styles from './PhotoTips.module.css'
-
-const DOS = [
-  'Face clearly visible and centered',
-  'Good natural lighting (near a window)',
-  'Plain or light-colored background',
-  'No heavy filters or color corrections',
-  'Front-facing, looking at camera',
-  'Hair pulled back if possible (to show neck/skin)',
-]
-
-const DONTS = [
-  'Sunglasses or heavy makeup',
-  'Dark or busy background',
-  'Backlit photos (light behind you)',
-  'Heavily filtered or edited selfies',
-  'Side profile or angled shots',
-  'Low resolution or blurry images',
-]
 
 export default function PhotoTips() {
   const [open, setOpen] = useState(false)
+  const { t } = useTranslation()
+
+  const DOS   = ['do1','do2','do3','do4','do5','do6']
+  const DONTS = ['dont1','dont2','dont3','dont4','dont5','dont6']
 
   return (
     <div className={styles.wrap}>
@@ -29,51 +16,51 @@ export default function PhotoTips() {
         onClick={() => setOpen((o) => !o)}
         type="button"
       >
-        💡 Tips for best results
+        {t('analyzer_tips_toggle')}
         <span className={[styles.arrow, open ? styles.arrowOpen : ''].join(' ')}>▾</span>
       </button>
 
       <div className={[styles.card, open ? styles.cardOpen : ''].join(' ')} aria-hidden={!open}>
-        <p className={styles.cardTitle}>📸 Photo Tips for Best Results</p>
+        <p className={styles.cardTitle}>{t('analyzer_tips_title')}</p>
 
         {/* Example thumbnails */}
         <div className={styles.examples}>
           <div className={styles.exampleWrap}>
             <div className={styles.thumb}>
-              <img src="/images/tips/good-photo.png" className={styles.tipImg} alt="Good photo example" />
+              <img src="/images/tips/good-photo.png" className={styles.tipImg} alt={t('analyzer_good_label')} />
             </div>
-            <span className={[styles.exLabel, styles.exLabelGood].join(' ')}>✓ Good</span>
-            <span className={styles.exCaption}>Natural light, clear face</span>
+            <span className={[styles.exLabel, styles.exLabelGood].join(' ')}>{t('analyzer_good_label')}</span>
+            <span className={styles.exCaption}>{t('analyzer_good_caption')}</span>
           </div>
           <div className={styles.exampleWrap}>
             <div className={styles.thumb}>
-              <img src="/images/tips/avoid-photo.png" className={styles.tipImg} alt="Avoid photo example" />
+              <img src="/images/tips/avoid-photo.png" className={styles.tipImg} alt={t('analyzer_avoid_label')} />
             </div>
-            <span className={[styles.exLabel, styles.exLabelBad].join(' ')}>✗ Avoid</span>
-            <span className={styles.exCaption}>Dark, backlit or filtered</span>
+            <span className={[styles.exLabel, styles.exLabelBad].join(' ')}>{t('analyzer_avoid_label')}</span>
+            <span className={styles.exCaption}>{t('analyzer_avoid_caption')}</span>
           </div>
         </div>
 
         {/* DO / DON'T grid */}
         <div className={styles.grid}>
           <div className={styles.col}>
-            <span className={[styles.badge, styles.badgeGood].join(' ')}>✓ DO</span>
+            <span className={[styles.badge, styles.badgeGood].join(' ')}>{t('analyzer_do')}</span>
             <ul className={styles.tipList}>
-              {DOS.map((tip) => (
-                <li key={tip} className={styles.tipItem}>
+              {DOS.map((key) => (
+                <li key={key} className={styles.tipItem}>
                   <span className={styles.iconGood}>✓</span>
-                  <span>{tip}</span>
+                  <span>{t(key)}</span>
                 </li>
               ))}
             </ul>
           </div>
           <div className={styles.col}>
-            <span className={[styles.badge, styles.badgeBad].join(' ')}>✗ DON&apos;T</span>
+            <span className={[styles.badge, styles.badgeBad].join(' ')}>{t('analyzer_dont')}</span>
             <ul className={styles.tipList}>
-              {DONTS.map((tip) => (
-                <li key={tip} className={styles.tipItem}>
+              {DONTS.map((key) => (
+                <li key={key} className={styles.tipItem}>
                   <span className={styles.iconBad}>✗</span>
-                  <span>{tip}</span>
+                  <span>{t(key)}</span>
                 </li>
               ))}
             </ul>

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const STORAGE_KEY = 'auracolor_lang'
-const SUPPORTED = ['EN', 'TH', 'ZH', 'JA', 'KO']
+const SUPPORTED = ['EN', 'TH']
 
 function loadLang() {
   try {

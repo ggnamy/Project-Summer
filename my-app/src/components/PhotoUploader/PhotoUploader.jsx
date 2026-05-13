@@ -1,9 +1,11 @@
 import { useRef, useState, useCallback } from 'react'
+import { useTranslation } from '../../hooks/useTranslation'
 import styles from './PhotoUploader.module.css'
 
 export default function PhotoUploader({ onPhotoSelect, preview, disabled }) {
   const inputRef = useRef(null)
   const [dragging, setDragging] = useState(false)
+  const { t } = useTranslation()
 
   const processFile = useCallback((file) => {
     if (!file || !file.type.startsWith('image/')) return
@@ -30,7 +32,7 @@ export default function PhotoUploader({ onPhotoSelect, preview, disabled }) {
       role="button"
       tabIndex={disabled ? -1 : 0}
       onKeyDown={(e) => e.key === 'Enter' && inputRef.current?.click()}
-      aria-label="Upload photo"
+      aria-label={t('analyzer_drop')}
     >
       <input
         ref={inputRef}
@@ -43,9 +45,9 @@ export default function PhotoUploader({ onPhotoSelect, preview, disabled }) {
 
       {preview ? (
         <div className={styles.previewWrapper}>
-          <img src={preview} alt="Uploaded photo" className={styles.preview} />
+          <img src={preview} alt={t('analyzer_drop')} className={styles.preview} />
           <div className={styles.overlay}>
-            <span>✦ Change photo</span>
+            <span>{t('analyzer_change_photo')}</span>
           </div>
         </div>
       ) : (
@@ -53,8 +55,8 @@ export default function PhotoUploader({ onPhotoSelect, preview, disabled }) {
           <div className={styles.iconWrap}>
             <span className={styles.icon}>📷</span>
           </div>
-          <p className={styles.primary}>Drop your photo here</p>
-          <p className={styles.secondary}>or click to browse · JPG, PNG, WEBP</p>
+          <p className={styles.primary}>{t('analyzer_drop')}</p>
+          <p className={styles.secondary}>{t('analyzer_browse')}</p>
         </div>
       )}
     </div>
