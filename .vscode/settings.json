@@ -1,0 +1,13 @@
+{
+  "i18n-ally.localesPaths": ["my-app/src/locales"],
+  "i18n-ally.sourceLanguage": "en",
+  "i18n-ally.displayLanguage": "th",
+  "i18n-ally.keystyle": "flat",
+  "i18n-ally.enabledFrameworks": ["react"],
+  "i18n-ally.interpolation": {
+    "prefix": "{",
+    "suffix": "}"
+  },
+  "i18n-ally.namespace": false,
+  "i18n-ally.extract.autoDetect": true
+}

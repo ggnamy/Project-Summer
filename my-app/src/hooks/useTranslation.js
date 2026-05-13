@@ -1,12 +1,15 @@
 import { useSelector } from 'react-redux'
-import { translations } from '../translations'
+import en from '../locales/en.json'
+import th from '../locales/th.json'
+
+const locales = { EN: en, TH: th }
 
 export function useTranslation() {
   const currentLang = useSelector((s) => s.language.currentLang)
-  const dict = translations[currentLang] ?? translations.EN
+  const dict = locales[currentLang] ?? en
 
   function t(key, vars) {
-    let str = dict[key] ?? translations.EN[key] ?? key
+    let str = dict[key] ?? en[key] ?? key
     if (vars) {
       Object.entries(vars).forEach(([k, v]) => {
         str = str.replace(`{${k}}`, v)
