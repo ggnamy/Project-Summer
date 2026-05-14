@@ -26,7 +26,6 @@ const analysisSlice = createSlice({
     season: null,
     scores: null,
     scoringMode: null,
-    makeupReason: null,
     skinTone: null,
     recommendations: null,
     avoidColors: null,
@@ -40,7 +39,7 @@ const analysisSlice = createSlice({
     resetAnalysis(state) {
       Object.assign(state, {
         photo: null, undertone: null, season: null, scores: null,
-        scoringMode: null, makeupReason: null, skinTone: null,
+        scoringMode: null, skinTone: null,
         recommendations: null, avoidColors: null,
         status: 'idle', error: null,
       })
@@ -59,7 +58,6 @@ const analysisSlice = createSlice({
         state.season          = p.season
         state.scores          = p.scores
         state.scoringMode     = p.scoringMode
-        state.makeupReason    = p.makeupReason
         state.skinTone        = p.skinTone
         state.recommendations = p.recommendations
         state.avoidColors     = p.avoidColors

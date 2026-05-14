@@ -11,7 +11,7 @@ export default function Navbar() {
     { to: '/',         label: t('nav_home')     },
     { to: '/analyzer', label: t('nav_analyzer') },
     { to: '/tryon',    label: t('nav_quiz')      },
-    { to: '/tips',     label: t('nav_tips')      },
+{ to: '/advisor',  label: t('nav_advisor')   },
   ]
 
   return (

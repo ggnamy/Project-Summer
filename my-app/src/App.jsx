@@ -3,8 +3,7 @@ import Navbar from './components/Navbar/Navbar'
 import HomePage from './pages/HomePage'
 import AnalyzerPage from './features/analysis/AnalyzerPage'
 import QuizPage from './features/quiz/QuizPage'
-import TipsPage from './features/tips/TipsPage'
-import TipDetailPage from './features/tips/TipDetailPage'
+import AdvisorPage from './features/advisor/AdvisorPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 export default function App() {
@@ -15,8 +14,7 @@ export default function App() {
         <Route path="/"         element={<HomePage />}       />
         <Route path="/analyzer" element={<AnalyzerPage />}   />
         <Route path="/tryon"    element={<QuizPage />}       />
-        <Route path="/tips"     element={<TipsPage />}       />
-        <Route path="/tips/:id" element={<TipDetailPage />}  />
+<Route path="/advisor"  element={<AdvisorPage />}    />
         <Route path="*"         element={<NotFoundPage />}   />
       </Routes>
     </BrowserRouter>
